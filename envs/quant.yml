@@ -1,0 +1,6 @@
+name: quant
+channels:
+    - bioconda
+    - conda-forge
+dependencies:
+    - kallisto=0.46.2

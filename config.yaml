@@ -1,0 +1,4 @@
+samples: samples.csv
+kallisto_index: data/refs/transcriptome.idx
+kallisto_tx2gene: data/refs/transcripts_to_genes.txt
+kallisto_threads: 4

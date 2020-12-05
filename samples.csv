@@ -1,0 +1,2 @@
+patient,sample,condition,fq1,fq2,strandedness
+khavari,normal,melanocytes,data/rfp_R1.txt.gz,data/rfp_R2.txt.gz,forward

@@ -1,3 +1,5 @@
+singularity: "docker://continuumio/miniconda3"
+
 import sys
 import pandas as pd
 from snakemake.utils import validate
@@ -28,7 +30,7 @@ def getStrand(wildcards):
         return '--fr-stranded'
     elif s == 'reverse':
         return '--rf-stranded'
-    elif s == 'none':
+    elif s == 'none' or s == 'unstranded':
         return ''
     else:
         raise ValueError(f"Unrecognized strand type for {wildcards.sample_id}")
@@ -47,7 +49,7 @@ rule kallisto:
         strand = lambda wildcards: getStrand(wildcards)
     log:
         "logs/kallisto/{sample_id}.log"
-    threads: 1
+    threads: 4
     conda:
         "envs/quant.yml"
     shell:

@@ -1,2 +1,3 @@
 patient,sample,condition,fq1,fq2,strandedness
-khavari,normal,melanocytes,data/rfp_R1.txt.gz,data/rfp_R2.txt.gz,forward
+khavari,normal,melanocytes,/home/groups/carilee/melanocyte-rnaseq/rfp_R1.fastq.gz,/home/groups/carilee/melanocyte-rnaseq/rfp_R2.fastq.gz,none
+sra,normal,melanocytes,/scratch/users/tbencomo/sra-tests/SRR849502_1.fastq,/scratch/users/tbencomo/sra-tests/SRR849502_2.fastq,unstranded

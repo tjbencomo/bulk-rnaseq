@@ -14,7 +14,6 @@ kallisto_idx = config['kallisto_index']
 kallisto_tx2g = config['kallisto_tx2gene']
 kallisto_threads = config['kallisto_threads']
 
-INFER_READS = 50000
 
 def get_fqs(wildcards):
     return {

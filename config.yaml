@@ -1,4 +1,18 @@
+# CSV file with sample information
 samples: samples.csv
+
+# Kallisto Info
 kallisto_index: data/refs/transcriptome.idx
-kallisto_tx2gene: data/refs/transcripts_to_genes.txt
+kallisto_tx2gene: transcripts_to_genes.txt
 kallisto_threads: 4
+
+# Experimental Design
+design_formula: ~ condition
+contrasts:
+    tumor-vs-normal:
+        - tumor
+        - normal
+factor_levels:
+    condition: normal, tumor
+    seqtype: single, paired
+

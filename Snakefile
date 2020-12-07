@@ -15,6 +15,8 @@ samples = samples.sort_index()
 kallisto_idx = config['kallisto_index']
 kallisto_tx2g = config['kallisto_tx2gene']
 kallisto_threads = config['kallisto_threads']
+se_frag_length = config['single_end_frag_length']
+se_frag_sd = config['single_end_frag_sd']
 
 # parse factor levels into readable string format
 # pass this string as param to deseq2_init.R
@@ -25,6 +27,8 @@ for level in levels:
     lvlstr.append(f"{level}={lvls}")
 var_levels = ';'.join(lvlstr)
 
+design_formula = config['design_formula']
+
 def get_fqs(wildcards):
     if isPE(wildcards):
         return {
@@ -32,7 +36,7 @@ def get_fqs(wildcards):
             'fq2' : samples.loc[(wildcards.sample_id), 'fq2']
             }
     else:
-        return {'fq1' : samples.loc[(wildcards.sample_id), 'fq1']}
+        return {'fq' : samples.loc[(wildcards.sample_id), 'fq1']}
 
 def getStrand(wildcards):
     s = samples.loc[wildcards.sample_id, 'strandedness'].lower()
@@ -72,7 +76,10 @@ rule kallisto:
         directory("kallisto/{sample_id}")
     params:
         strand = lambda wildcards: getStrand(wildcards),
-        fqs = lambda wildcards, input: input.fq if not isPE(wildcards) else f"{input.fq1} {input.fq2}"
+        fqs = lambda wildcards, input: input.fq if not isPE(wildcards) else f"{input.fq1} {input.fq2}",
+        single = lambda wildcards: '' if isPE(wildcards) else '--single',
+        frag_length = lambda wildcards: '' if isPE(wildcards) else f"-l {se_frag_length}",
+        frag_sd = lambda wildcards: '' if isPE(wildcards) else f"-s {se_frag_sd}"
     log:
         "logs/kallisto/{sample_id}.log"
     threads: 4
@@ -80,8 +87,9 @@ rule kallisto:
         "envs/quant.yml"
     shell:
         """
-        kallisto quant -i {input.idx} -o {output} -t {threads} {params.strand} \
-            {params.fqs} | tee {log}
+        kallisto quant -i {input.idx} -o {output} -t {threads} \
+            {params.strand} {params.single} {params.frag_length} {params.frag_sd} \
+            {params.fqs} &> >(tee {log})
         """
 
 rule deseq2_init:
@@ -93,6 +101,11 @@ rule deseq2_init:
         deseq="deseq2/all.rds",
         cts="results/normalized_counts.rds"
     params:
+        formula=design_formula,
         levels=var_levels
+    log:
+        "logs/deseq2/init.log"
+    conda:
+        "envs/deseq2.yml"
     script:
         "scripts/deseq2.R"

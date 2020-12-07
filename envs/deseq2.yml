@@ -6,6 +6,7 @@ dependencies:
     - bioconductor-deseq2
     - bioconductor-tximport
     - bioconductor-apeglm
+    - bioconductor-rhdf5
     - r-readr
     - r-stringr
     - r-ggplot2

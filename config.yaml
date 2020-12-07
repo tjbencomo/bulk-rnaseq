@@ -1,18 +1,21 @@
 # CSV file with sample information
-samples: samples.csv
+samples: samples2.csv
 
 # Kallisto Info
-kallisto_index: data/refs/transcriptome.idx
-kallisto_tx2gene: transcripts_to_genes.txt
+kallisto_index: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcriptome.idx
+kallisto_tx2gene: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcripts_to_genes.txt
 kallisto_threads: 4
+single_end_frag_length: 200
+single_end_frag_sd: 20
 
 # Experimental Design
-design_formula: ~ condition
+design_formula: ~ libtype + condition
 contrasts:
     tumor-vs-normal:
         - tumor
         - normal
 factor_levels:
-    condition: normal, tumor
-    seqtype: single, paired
+    sample: normal, tumor
+    condition: melanocytes, primary, metastatic
+    libtype: se, pe
 

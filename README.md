@@ -16,7 +16,7 @@ Run jobs on the current node
 ```
 snakemake -j [cores] --use-singularity --use-conda
 ```
-Run jobs on a SLURM cluster, chec
+Run jobs on a SLURM cluster
 ```
 sbatch run_pipeline.sh
 ```

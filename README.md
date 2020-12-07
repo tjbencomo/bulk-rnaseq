@@ -12,13 +12,11 @@ to normalize counts and detect DEGs.
 6. (Optional) If you plan on using a SLURM cluster, fill out the SBATCH directives in `run_pipeline.sh` and the logs directory in `cluster.json`
 
 ## Running the pipeline
-To run from the command line
+Run jobs on the current node
 ```
 snakemake -j [cores] --use-singularity --use-conda
 ```
-To run jobs on a SLURM cluster, chec
+Run jobs on a SLURM cluster, chec
 ```
 sbatch run_pipeline.sh
 ```
-
-## Results

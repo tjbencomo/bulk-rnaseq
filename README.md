@@ -7,12 +7,12 @@ to normalize counts and detect DEGs.
 1. Install `snakemake`
 2. Download the appropriate kallisto references from [here](https://github.com/pachterlab/kallisto-transcriptome-indices/releases) or build your own
 3. Clone the repository
-4. Describe your samples in `samples.csv
+4. Describe your samples in `samples.csv`
 5. Modify the settings in `config.yaml`
-6. (Optional) If you plan on using a SLURM cluster, fill out the SBATCH directives in `run_pipeline.sh` and the logs directory in `cluster.json`
+6. (Optional) If you plan on using a SLURM cluster, fill out the `#SBATCH` directives in `run_pipeline.sh` and the `out` field in `cluster.json`
 
 ## Running the pipeline
-Run jobs on the current node
+Run jobs locally
 ```
 snakemake -j [cores] --use-singularity --use-conda
 ```

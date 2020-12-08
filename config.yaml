@@ -5,13 +5,24 @@ samples: samples2.csv
 kallisto_index: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcriptome.idx
 kallisto_tx2gene: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcripts_to_genes.txt
 kallisto_threads: 4
+
+# NOTE: If you are analyzing single end reads these must be defined
+# mean RNA fragment length (not read length)
 single_end_frag_length: 200
+# standard deviation RNA fragment length
 single_end_frag_sd: 20
 
+# Variables to color label PCA plot
+# Comma separated list of columns specified in samples.csv
 pca_labels: condition, libtype
 
 # Experimental Design
 design_formula: ~ libtype + condition
+# Contrasts for DESeq2 to estimate
+# These must be ffor the last (right most) variable in the design_formula
+# The specification is numerator-vs-denominator
+# Thus if you wanted to compare treated vs untreated samples with untreated
+# as the reference level, it would be treated-vs-untreated
 contrasts:
     primary-vs-melanocytes:
         - primary
@@ -22,6 +33,8 @@ contrasts:
     metastatic-vs-melanocytes:
         - metastatic
         - primary
+# Factor level ordering for relevant variables in the design formula
+# The first value will be the reference level
 factor_levels:
     sample: normal, tumor
     condition: melanocytes, primary, metastatic

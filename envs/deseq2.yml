@@ -7,9 +7,13 @@ dependencies:
     - bioconductor-tximport
     - bioconductor-apeglm
     - bioconductor-rhdf5
+    - bioconductor-ihw
+    - r-ashr
+    - r-annotables
     - r-readr
     - r-stringr
     - r-ggplot2
+    - r-dplyr
     - r-svglite
     - libiconv
     - mscorefonts

@@ -55,6 +55,9 @@ def isPE(wildcards):
     else:
         return True
 
+def get_contrast(wildcards):
+    return config['contrasts'][wildcards.contrast]
+
 ###########################################################
 ### Snakemake Rules
 ###########################################################
@@ -62,10 +65,10 @@ def isPE(wildcards):
 rule targets:
     input:
         expand("kallisto/{sample_id}", sample_id=samples['id']),
-        #expand("results/{contrast}/{estimate}_foldchanges.csv", contrast=config['contrasts'], estimate=['mle', 'map']),
+        expand("results/{contrast}/{estimate}_foldchanges.csv", contrast=config['contrasts'], estimate=['mle', 'map']),
         #expand("results/{contrast}/ma_plot.svg", contrast=config['contrasts']),
         #"results/pca_plot.svg",
-        #"results/normalized_counts.rds",
+        "results/normalized_counts.rds",
         "deseq2/all.rds"
 
 rule kallisto:
@@ -109,3 +112,21 @@ rule deseq2_init:
         "envs/deseq2.yml"
     script:
         "scripts/deseq2.R"
+
+rule diffexp:
+    input:
+        "deseq2/all.rds"
+    output:
+        mleres = "results/{contrast}/mle_foldchanges.csv",
+        mapres = "results/{contrast}/map_foldchanges.csv",
+        mlema = "results/{contrast}/mle_ma.svg",
+        mapma = "results/{contrast}/map_ma.svg"
+    params:
+        formula=design_formula,
+        contrast = get_contrast
+    log:
+        "logs/deseq2/{contrast}.log"
+    conda:
+        "envs/deseq2.yml"
+    script:
+        "scripts/diffexp.R"

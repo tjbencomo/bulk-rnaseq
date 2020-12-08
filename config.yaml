@@ -11,9 +11,15 @@ single_end_frag_sd: 20
 # Experimental Design
 design_formula: ~ libtype + condition
 contrasts:
-    tumor-vs-normal:
-        - tumor
-        - normal
+    primary-vs-melanocytes:
+        - primary
+        - melanocytes
+    metastatic-vs-primary:
+        - metastatic
+        - primary
+    metastatic-vs-melanocytes:
+        - metastatic
+        - primary
 factor_levels:
     sample: normal, tumor
     condition: melanocytes, primary, metastatic

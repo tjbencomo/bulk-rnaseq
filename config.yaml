@@ -8,6 +8,8 @@ kallisto_threads: 4
 single_end_frag_length: 200
 single_end_frag_sd: 20
 
+pca_labels: condition, libtype
+
 # Experimental Design
 design_formula: ~ libtype + condition
 contrasts:

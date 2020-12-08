@@ -29,6 +29,8 @@ var_levels = ';'.join(lvlstr)
 
 design_formula = config['design_formula']
 
+pca_labels = config['pca_labels'].replace(" ", "")
+
 def get_fqs(wildcards):
     if isPE(wildcards):
         return {
@@ -66,10 +68,11 @@ rule targets:
     input:
         expand("kallisto/{sample_id}", sample_id=samples['id']),
         expand("results/{contrast}/{estimate}_foldchanges.csv", contrast=config['contrasts'], estimate=['mle', 'map']),
-        #expand("results/{contrast}/ma_plot.svg", contrast=config['contrasts']),
-        #"results/pca_plot.svg",
+        expand("results/{contrast}/{estimate}_ma.svg", contrast=config['contrasts'], estimate=['mle', 'map']),
+        "results/pca_plot.svg",
         "results/normalized_counts.rds",
-        "deseq2/all.rds"
+        "deseq2/all.rds",
+        #"qc/multiqc_report.html"
 
 rule kallisto:
     input:
@@ -130,3 +133,29 @@ rule diffexp:
         "envs/deseq2.yml"
     script:
         "scripts/diffexp.R"
+
+rule multiqc:
+    input:
+        expand("logs/kallisto/{sample_id}.log", sample_id=samples['id'])
+    output:
+        "qc/multiqc_report.html"
+    log:
+        "logs/multiqc.log"
+    conda:
+        "envs/qc.yml"
+    wrapper:
+        "0.50.4/bio/multiqc"
+
+rule pca:
+    input:
+        "results/normalized_counts.rds"
+    output:
+        "results/pca_plot.svg"
+    params:
+        label_vars = pca_labels
+    log:
+        "logs/plot_pca.log"
+    conda:
+        "envs/deseq2.yml"
+    script:
+        "scripts/plot_pca.R"

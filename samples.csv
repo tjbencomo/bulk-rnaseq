@@ -1,3 +1,11 @@
-patient,sample,condition,fq1,fq2,strandedness
-khavari,normal,melanocytes,/home/groups/carilee/melanocyte-rnaseq/rfp_R1.fastq.gz,/home/groups/carilee/melanocyte-rnaseq/rfp_R2.fastq.gz,none
-sra,normal,melanocytes,/scratch/users/tbencomo/sra-tests/SRR849502_1.fastq,/scratch/users/tbencomo/sra-tests/SRR849502_2.fastq,unstranded
+patient,sample,condition,accession,cell_line,fq1,fq2,strandedness,libtype
+FM308,normal,melanocytes,SRR8844547,FM308,data/SRR8844547.fastq,,reverse,se
+WM852,tumor,metastatic,SRR8844546,WM852,data/SRR8844546.fastq,,reverse,se
+WM1617,tumor,metastatic,SRR8844545,WM1617,data/SRR8844545.fastq,,reverse,se
+WM793,tumor,primary,SRR8844543,WM793,data/SRR8844543.fastq,,reverse,se
+1205lu,tumor,metastatic,SRR8844544,1205lu,data/SRR8844544.fastq,,reverse,se
+WM1789,tumor,primary,SRR8844542,WM1789,data/SRR8844542.fastq,,reverse,se
+WM278,tumor,primary,SRR8844541,WM278,data/SRR8844541.fastq,,reverse,se
+WM1552,tumor,primary,SRR8844540,WM1552,data/SRR8844540.fastq,,reverse,se
+WM35,tumor,primary,SRR8844539,WM35,data/SRR8844539.fastq,,reverse,se
+KM01,normal,melanocytes,none,unknown,/home/groups/carilee/melanocyte-rnaseq/rfp_R1.fastq.gz,/home/groups/carilee/melanocyte-rnaseq/rfp_R2.fastq.gz,unstranded,pe

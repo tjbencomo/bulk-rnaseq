@@ -22,6 +22,7 @@ Run jobs on a SLURM cluster
 ```
 sbatch run_pipeline.sh $(pwd)
 ```
+Run this command from the `bulk-rnaseq` directory
 
 ## Output
 Results are stored in `results/` and include:

@@ -9,9 +9,10 @@ to normalize counts and detect DEGs.
 3. Clone the repository
 4. Describe your samples in `samples.csv`
 5. Modify the settings in `config.yaml`
-6. (Optional) If you plan on using a SLURM cluster, fill out the `#SBATCH` directives in `run_pipeline.sh` and the `out` field in `cluster.json`
+6. (Optional) If you plan on using a SLURM cluster, fill out the `#SBATCH` directives in `run_pipeline.sh` and the `out` and `account` fields in `cluster.json`
 7. (Optional) If you want to run the pipeline in a Singularity environment for full reproducibility, install Singularity. 
 `run_pipeline` assumes Singularity is installed. Delete the `--use-singularity` flag if you want to skip using a Singularity environment.
+The same goes for using `conda` environments, although it is recommended to use both for the best reproducibility.
 
 ## Running the pipeline
 Run jobs locally
@@ -20,8 +21,9 @@ snakemake -j [cores] --use-singularity --use-conda
 ```
 Run jobs on a SLURM cluster
 ```
-sbatch run_pipeline.sh
+sbatch run_pipeline.sh $(pwd)
 ```
+Run this command from the `bulk-rnaseq` directory
 
 ## Output
 Results are stored in `results/` and include:

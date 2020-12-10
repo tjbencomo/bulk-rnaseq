@@ -9,3 +9,11 @@ WM278,tumor,primary,SRR8844541,WM278,data/SRR8844541.fastq,,reverse,se
 WM1552,tumor,primary,SRR8844540,WM1552,data/SRR8844540.fastq,,reverse,se
 WM35,tumor,primary,SRR8844539,WM35,data/SRR8844539.fastq,,reverse,se
 KM01,normal,melanocytes,none,unknown,/home/groups/carilee/melanocyte-rnaseq/rfp_R1.fastq.gz,/home/groups/carilee/melanocyte-rnaseq/rfp_R2.fastq.gz,unstranded,pe
+A2058,tumor,metastatic,SRR849504,A2058,data/SRR849504_1.fastq,data/SRR849504_2.fastq,unstranded,pe
+A375,tumor,primary,SRR849505,A375,data/SRR849505_1.fastq,data/SRR849505_2.fastq,unstranded,pe
+C32,tumor,metastatic,SRR849506,C32,data/SRR849506_1.fastq,data/SRR849506_2.fastq,unstranded,pe
+MalMe3M,tumor,metastatic,SRR849507,MalMe3M,data/SRR849507_1.fastq,data/SRR849507_2.fastq,unstranded,pe
+SKMEL28,tumor,metastatic,SRR849508,SKMEL28,data/SRR849508_1.fastq,data/SRR849508_2.fastq,unstranded,pe
+SKMEL5,tumor,metastatic,SRR849509,SKMEL5,data/SRR849509_1.fastq,data/SRR849509_2.fastq,unstranded,pe
+WM2664,tumor,metastatic,SRR849510,WM2664,data/SRR849510_1.fastq,data/SRR849510_2.fastq,unstranded,pe
+AM01,normal,melanocytes,SRR849502,AM01,data/SRR849502_1.fastq,data/SRR849502_2.fastq,unstranded,pe

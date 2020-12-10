@@ -4,6 +4,7 @@ sink(log, type="message")
 
 library(tximport)
 library(DESeq2)
+library(readr)
 library(stringr)
 
 res_dirs <- snakemake@input[['cts']]

@@ -72,7 +72,7 @@ rule targets:
         "results/pca_plot.svg",
         "results/normalized_counts.rds",
         "deseq2/all.rds",
-        #"qc/multiqc_report.html"
+        "qc/multiqc_report.html"
 
 rule kallisto:
     input:

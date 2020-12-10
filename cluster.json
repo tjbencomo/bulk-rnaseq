@@ -12,7 +12,7 @@
     {
         "time" : "1:00:00",
         "ncpus" : 4,
-        "mem" : "8G"
+        "mem" : "10G"
     },
     "deseq2_init" :
     {
@@ -23,7 +23,7 @@
     "diffexp" :
     {
         "time" : "00:30:00",
-        "ncpus" : 1,
+        "ncpus" : 2,
         "mem" : "8G"
     },
     "pca" :

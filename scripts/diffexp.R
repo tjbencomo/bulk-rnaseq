@@ -1,6 +1,6 @@
-# log <- file(snakemake@log[[1]], open="wt")
-# sink(log)
-# sink(log, type="message")
+log <- file(snakemake@log[[1]], open="wt")
+sink(log)
+sink(log, type="message")
 
 library(DESeq2)
 library(IHW)
@@ -8,6 +8,14 @@ library(ggplot2)
 library(dplyr)
 library(stringr)
 library(annotables)
+
+if (snakemake@threads > 1) {
+    library("BiocParallel")
+    parallel <- TRUE
+    register(MulticoreParam(snakemake@threads))
+} else {
+    parallel <- FALSE
+}
 
 dds <- readRDS(snakemake@input[[1]])
 
@@ -21,8 +29,9 @@ print(snakemake@params[['contrast']])
 # eb_coef <- str_c(c(var, snakemake@params[['contrast']][1], "vs", snakemake@params[['contrast']][2]), collapse="_")
 # print(eb_coef)
 mle_res <- results(dds, contrast=c(var, snakemake@params[['contrast']]),
-                   filterFun=ihw, alpha = .05)
-map_res <- lfcShrink(dds, contrast=c(var, snakemake@params[['contrast']]), type = "ashr")
+                   filterFun=ihw, alpha = .05, parallel = parallel)
+map_res <- lfcShrink(dds, contrast=c(var, snakemake@params[['contrast']]), type = "ashr",
+                     parallel = parallel)
 # map_res <- lfcShrink(dds, coef=eb_coef, type = "apeglm")
 
 print("MLE LFC:")

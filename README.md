@@ -21,9 +21,9 @@ snakemake -j [cores] --use-singularity --use-conda
 ```
 Run jobs on a SLURM cluster
 ```
-sbatch run_pipeline.sh $(pwd)
+sbatch run_pipeline.sh [path to directory with Snakefile]
 ```
-Run this command from the `bulk-rnaseq` directory
+
 
 ## Output
 Results are stored in `results/` and include:

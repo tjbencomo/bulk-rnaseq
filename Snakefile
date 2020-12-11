@@ -42,7 +42,7 @@ def get_fqs(wildcards):
 
 def getStrand(wildcards):
     s = samples.loc[wildcards.sample_id, 'strandedness'].lower()
-    if s == 'forward':
+    if s == 'forward' or s == "stranded:
         return '--fr-stranded'
     elif s == 'reverse':
         return '--rf-stranded'

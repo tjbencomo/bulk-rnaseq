@@ -14,6 +14,18 @@ to normalize counts and detect DEGs.
 `run_pipeline` assumes Singularity is installed. Delete the `--use-singularity` flag if you want to skip using a Singularity environment.
 The same goes for using `conda` environments, although it is recommended to use both for the best reproducibility.
 
+## Sample File Configuration
+`bulk-rnaseq` requires you specify a CSV file with a metadata about samples to analyze. 
+There are several required columns:
+* `patient`
+* `sample`
+* `fq1`
+* `fq2`
+* `strandedness`
+
+The `patient` and `sample` columns are used to create a sample specific ID for downstream processing and identification.
+The values specified in the these columns should create unique values when combined as `{patient}-{sample}`. 
+
 ## Running the pipeline
 Run jobs locally
 ```
@@ -21,9 +33,8 @@ snakemake -j [cores] --use-singularity --use-conda
 ```
 Run jobs on a SLURM cluster
 ```
-sbatch run_pipeline.sh $(pwd)
+sbatch run_pipeline.sh [path to directory with Snakefile]
 ```
-Run this command from the `bulk-rnaseq` directory
 
 ## Output
 Results are stored in `results/` and include:
@@ -38,4 +49,5 @@ Each contrast has its own folder in `results/` with the following files:
 
 The full DESeq2 object used for differential expression analysis can be found in `deseq2/`.
 
-A MultiQC html report with `kallisto` statistics for each sample is located in `qc/`. Check this to verify a reasonable proportion of reads were pseudoaligned.
+A MultiQC html report with `kallisto` statistics for each sample is located in `qc/`. 
+Check this to verify a reasonable proportion of reads were pseudoaligned.

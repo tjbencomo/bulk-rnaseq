@@ -129,6 +129,7 @@ rule diffexp:
         contrast = get_contrast
     log:
         "logs/deseq2/{contrast}.log"
+    threads: 2
     conda:
         "envs/deseq2.yml"
     script:
@@ -136,7 +137,8 @@ rule diffexp:
 
 rule multiqc:
     input:
-        expand("logs/kallisto/{sample_id}.log", sample_id=samples['id'])
+        expand("logs/kallisto/{sample_id}.log", sample_id=samples['id']),
+        expand("qc/fastqc/{sample_id}", sample_id=samples['id'])
     output:
         "qc/multiqc_report.html"
     log:
@@ -159,3 +161,22 @@ rule pca:
         "envs/deseq2.yml"
     script:
         "scripts/plot_pca.R"
+
+rule fastqc:
+    input:
+        unpack(get_fqs)
+    output:
+        directory("qc/fastqc/{sample_id}")
+    conda:
+        "envs/qc.yml"
+    log:
+        "logs/fastqc/{sample_id}.log"
+    shell:
+        """
+        tmpdir=qc/fastqc/.{wildcards.sample_id}.tmp
+        mkdir $tmpdir
+        mkdir {output}
+        fastqc {input} -o {output} &> >(tee {log}) -d $tmpdir
+        rm -r $tmpdir
+        """
+

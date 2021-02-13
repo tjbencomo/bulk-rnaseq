@@ -50,7 +50,8 @@ mle_df <- mle_res %>%
   left_join(grch38) %>%
   dplyr::select(-chr, -start, -end, -strand, -biotype, -description) %>%
   dplyr::select(symbol, ensgene, everything()) %>%
-  dplyr::arrange(padj)
+  dplyr::arrange(padj) %>%
+  dplyr::distinct(symbol, .keep_all = TRUE)
 
 map_df <- map_res %>%
     data.frame() %>%
@@ -60,7 +61,8 @@ map_df <- map_res %>%
     left_join(grch38) %>%
     dplyr::select(-chr, -start, -end, -strand, -biotype, -description) %>%
     dplyr::select(symbol, ensgene, everything()) %>%
-    dplyr::arrange(padj)
+    dplyr::arrange(padj) %>%
+    dplyr::distinct(symbol, .keep_all = TRUE)
 
 print("MLE dataframe")
 print(mle_df)

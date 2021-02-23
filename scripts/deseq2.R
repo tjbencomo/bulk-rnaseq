@@ -30,6 +30,8 @@ samples <- read.csv(samples_fp)
 samples$id <- paste(samples$patient, "-", samples$sample, sep = "")
 # Reorder rows so they match files order
 samples <- samples[match(names(files), samples$id),]
+print(files)
+print(samples)
 
 ## Ensure factor ordering based on config specifications
 vars <- snakemake@params[['levels']]

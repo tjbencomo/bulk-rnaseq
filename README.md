@@ -25,6 +25,7 @@ There are several required columns:
 
 The `patient` and `sample` columns are used to create a sample specific ID for downstream processing and identification.
 The values specified in the these columns should create unique values when combined as `{patient}-{sample}`. 
+`sample` should specify the condition of the sample (ie `normal` or `tumor`).
 
 ## Running the pipeline
 Run jobs locally

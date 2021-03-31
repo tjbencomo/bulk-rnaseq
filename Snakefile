@@ -72,6 +72,15 @@ def get_quants(wildcards):
 def get_contrast(wildcards):
     return config['contrasts'][wildcards.contrast]
 
+def get_multiqc_input(wildcards):
+    if quant_program == 'kallisto':
+        logs = [f"logs/kallisto/{sample_id}.log" for sample_id in samples['id']]
+    else:
+        logs = [f"salmon/{sample_id}" for sample_id in samples['id']]
+    fastqc = [f"qc/fastqc/{sample_id}" for sample_id in samples['id']]
+    return logs + fastqc
+
+
 ###########################################################
 ### Snakemake Rules
 ###########################################################
@@ -168,8 +177,9 @@ rule diffexp:
 
 rule multiqc:
     input:
-        expand("logs/{program}/{sample_id}.log", program = quant_program, sample_id=samples['id']),
-        expand("qc/fastqc/{sample_id}", sample_id=samples['id'])
+        get_multiqc_input
+        #expand("logs/{program}/{sample_id}.log", program = quant_program, sample_id=samples['id']),
+        #expand("qc/fastqc/{sample_id}", sample_id=samples['id'])
     output:
         "qc/multiqc_report.html"
     log:

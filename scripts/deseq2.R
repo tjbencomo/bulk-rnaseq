@@ -10,6 +10,7 @@ library(stringr)
 res_dirs <- snakemake@input[['cts']]
 tx2g_fp <- snakemake@input[['tx2g']]
 samples_fp <- snakemake@input[['samples']]
+quant_program <- snakemake@params[['aligner']]
 
 design_formula <- snakemake@params[['formula']]
 
@@ -21,10 +22,15 @@ if (snakemake@threads > 1) {
     parallel <- FALSE
 }
 
-files <- file.path(res_dirs, "abundance.h5")
+if (quant_program == 'kallisto') {
+    files <- file.path(res_dirs, "abundance.h5")
+} else {
+    files <- file.path(res_dirs, "quants.sf")
+}
 names(files) <- basename(dirname(files))
 tx2g <- read_table2(tx2g_fp, col_names = c("tx", "ensgene", "symbol"))
-txi <- tximport(files, type = "kallisto", txOut = FALSE, tx2g = tx2g[, 1:2])
+txi <- tximport(files, type = quant_program, txOut = FALSE, tx2g = tx2g[, 1:2])
+# txi <- tximport(files, type = "kallisto", txOut = FALSE, tx2g = tx2g[, 1:2])
 
 samples <- read.csv(samples_fp)
 samples$id <- paste(samples$patient, "-", samples$sample, sep = "")

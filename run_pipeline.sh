@@ -2,7 +2,7 @@
 #SBATCH --job-name=bulk-rnaseq
 #SBATCH --output=/scratch/users/tbencomo/logs/bulk-rnaseq.out
 #SBATCH --nodes=1
-#SBATCH --time=00-08:00:00
+#SBATCH --time=00-04:00:00
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=2000
 #SBATCH --mail-type=END

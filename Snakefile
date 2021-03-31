@@ -12,11 +12,14 @@ samples['id'] = samples['patient'] + '-' + samples['sample']
 samples = samples.set_index(["id"], drop=False)
 samples = samples.sort_index()
 
+quant_program = config['quant_program']
+
 kallisto_idx = config['kallisto_index']
-kallisto_tx2g = config['kallisto_tx2gene']
+tx2g = config['tx2gene']
 kallisto_threads = config['kallisto_threads']
 se_frag_length = config['single_end_frag_length']
 se_frag_sd = config['single_end_frag_sd']
+salmon_idx = config['salmon_index']
 
 # parse factor levels into readable string format
 # pass this string as param to deseq2_init.R
@@ -56,6 +59,15 @@ def isPE(wildcards):
         return False
     else:
         return True
+
+def get_quants(wildcards):
+    if quant_program == 'kallisto':
+        quants = [f"kallisto/{sid}" for sid in samples['id']]
+    elif quant_program == 'salmon':
+        quants = [f"salmon/{sid}" for sid in samples['id']]
+    else:
+        raise ValueError("quant_program must be either 'salmon' or 'kallisto'")
+    return {'cts' : quants}
 
 def get_contrast(wildcards):
     return config['contrasts'][wildcards.contrast]
@@ -98,15 +110,34 @@ rule kallisto:
             {params.fqs} &> >(tee {log})
         """
 
+rule salmon:
+    input:
+        unpack(get_fqs),
+        idx=salmon_idx
+    output:
+        directory("salmon/{sample_id}")
+    params:
+        fqs = lambda wildcards, input: f"-r {input.fq}" if not isPE(wildcards) else f"-1 {input.fq1} -2 {input.fq2}"
+    log:
+        "logs/salmon/{sample_id}.log"
+    threads: 4
+    conda:
+        "envs/salmon.yml"
+    shell:
+        """
+        salmon quant -i {input.idx} -l A {params.fqs} -p {threads} -o {output}
+        """
+
 rule deseq2_init:
     input:
-        cts = expand("kallisto/{sample_id}", sample_id = samples['id']),
+        unpack(get_quants),
         samples=samples_fp,
-        tx2g = kallisto_tx2g
+        tx2g = tx2g
     output:
         deseq="deseq2/all.rds",
         cts="results/normalized_counts.rds"
     params:
+        aligner=quant_program,
         formula=design_formula,
         levels=var_levels
     log:
@@ -137,7 +168,7 @@ rule diffexp:
 
 rule multiqc:
     input:
-        expand("logs/kallisto/{sample_id}.log", sample_id=samples['id']),
+        expand("logs/{program}/{sample_id}.log", program = quant_program, sample_id=samples['id']),
         expand("qc/fastqc/{sample_id}", sample_id=samples['id'])
     output:
         "qc/multiqc_report.html"

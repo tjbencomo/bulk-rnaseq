@@ -1,20 +1,28 @@
 # CSV file with sample information
-samples: samples2.csv
+#samples: samples.csv
+samples: test.csv
+
+# General Info
+# Specify 'salmon' or 'kallisto'
+quant_program: 'salmon'
+tx2gene: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcripts_to_genes.txt
+
+# Salmon Info
+salmon_index: /home/groups/carilee/refs/salmon/default/
 
 # Kallisto Info
 kallisto_index: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcriptome.idx
-kallisto_tx2gene: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcripts_to_genes.txt
 kallisto_threads: 4
 
 # NOTE: If you are analyzing single end reads these must be defined
-# mean RNA fragment length (not read length)
+# mean RNA fragment length (not read length). Otherwise set to None
 single_end_frag_length: 200
 # standard deviation RNA fragment length
 single_end_frag_sd: 20
 
 # Variables to color label PCA plot
 # Comma separated list of columns specified in samples.csv
-pca_labels: condition, libtype
+pca_labels: condition
 
 # Experimental Design
 design_formula: ~ libtype + condition
@@ -32,7 +40,7 @@ contrasts:
         - primary
     metastatic-vs-melanocytes:
         - metastatic
-        - primary
+        - melanocytes
 # Factor level ordering for relevant variables in the design formula
 # The first value will be the reference level
 factor_levels:

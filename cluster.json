@@ -14,6 +14,12 @@
         "ncpus" : 4,
         "mem" : "10G"
     },
+    "salon" :
+    {
+        "time" : "3:00:00",
+        "ncpus" : 4,
+        "mem" : "10G"
+    },
     "deseq2_init" :
     {
         "time" : "1:00:00",

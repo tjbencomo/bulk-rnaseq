@@ -1,11 +1,11 @@
 # bulk-rnaseq
 Simple  workflow to quantify gene-level RNA abundance and detect differentially expressed genes (DEGs) 
-from bulk RNAseq samples. The pipeline uses `kallisto` to quantify transcript level abundance and `DESeq2` 
+from bulk RNAseq samples. The pipeline uses `kallisto` or `salmon` to quantify transcript level abundance and `DESeq2` 
 to normalize counts and detect DEGs. 
 
 ## Installation
 1. Install Anaconda or Miniconda and then `conda install snakemake`
-2. Download the appropriate `kallisto` references from [here](https://github.com/pachterlab/kallisto-transcriptome-indices/releases) or build your own
+2. Download the appropriate `kallisto` [references](https://github.com/pachterlab/kallisto-transcriptome-indices/releases) or salmon [references](http://refgenomes.databio.org) or build your own
 3. Clone the repository
 4. Describe your samples in `samples.csv`
 5. Modify the settings in `config.yaml`
@@ -21,11 +21,16 @@ There are several required columns:
 * `sample`
 * `fq1`
 * `fq2`
-* `strandedness`
+* `strandedness` (required by `kallisto`; optional if using `salmon`)
 
 The `patient` and `sample` columns are used to create a sample specific ID for downstream processing and identification.
 The values specified in the these columns should create unique values when combined as `{patient}-{sample}`. 
-`sample` should specify the condition of the sample (ie `normal` or `tumor`).
+`sample` should specify the condition of the sample (ie `normal` or `tumor`). 
+
+**NOTE** `salmon` will automatically infer the library stranding and choose the best option. `kallisto` requires you specify
+the stranding info. See [`check-strand`](https://github.com/tjbencomo/check-strand) to determine the proper stranding if you prefer to
+run `kallisto`.
+
 
 ## Running the pipeline
 Run jobs locally

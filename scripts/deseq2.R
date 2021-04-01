@@ -25,7 +25,7 @@ if (snakemake@threads > 1) {
 if (quant_program == 'kallisto') {
     files <- file.path(res_dirs, "abundance.h5")
 } else {
-    files <- file.path(res_dirs, "quants.sf")
+    files <- file.path(res_dirs, "quant.sf")
 }
 names(files) <- basename(dirname(files))
 tx2g <- read_table2(tx2g_fp, col_names = c("tx", "ensgene", "symbol"))

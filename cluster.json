@@ -14,7 +14,7 @@
         "ncpus" : 4,
         "mem" : "10G"
     },
-    "salon" :
+    "salmon" :
     {
         "time" : "3:00:00",
         "ncpus" : 4,

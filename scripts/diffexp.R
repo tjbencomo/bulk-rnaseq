@@ -26,13 +26,16 @@ s <- str_split(design_formula, '\\+', simplify=T)
 var <- str_trim(s[1, dim(s)[2]])
 
 print(snakemake@params[['contrast']])
-# eb_coef <- str_c(c(var, snakemake@params[['contrast']][1], "vs", snakemake@params[['contrast']][2]), collapse="_")
-# print(eb_coef)
-mle_res <- results(dds, contrast=c(var, snakemake@params[['contrast']]),
-                   filterFun=ihw, alpha = .05, parallel = parallel)
-map_res <- lfcShrink(dds, contrast=c(var, snakemake@params[['contrast']]), type = "ashr",
-                     parallel = parallel)
-# map_res <- lfcShrink(dds, coef=eb_coef, type = "apeglm")
+
+contrast_coef <- paste(c(var, snakemake@params[['contrast']][1], "vs", snakemake@params[['contrast']][2]), collapse="_")
+#mle_res <- results(dds, contrast=c(var, snakemake@params[['contrast']]),
+#                   filterFun=ihw, alpha = .05, parallel = parallel)
+# map_res <- lfcShrink(dds, contrast=c(var, snakemake@params[['contrast']]), type = "ashr",
+#                      parallel = parallel)
+mle_res <- results(dds, coef=contrast_coef, filterFun=ihw, alpha = .05, parallel = parallel)
+map_res <- lfcShrink(dds, coef=contrast_coef, type = "apeglm", parallel = parallel)
+
+
 
 print("MLE LFC:")
 print(mle_res)
@@ -42,12 +45,18 @@ print("MAP LFC:")
 print(map_res)
 print(summary(map_res))
 
+## Filter out duplicate genes from extra contigs/multiple genes on extra contigs/duplicates with different entrez ID
+contigs <- c(1:23, "X", "Y", "MT")
+genes <- grch38 %>%
+  filter(chr %in% contigs) %>%
+  distinct(ensgene, symbol, chr, start, end, strand, biotype, .keep_all = TRUE)
+
 mle_df <- mle_res %>%
   data.frame() %>%
   tibble::rownames_to_column(var = "ensgene") %>%
   as_tibble() %>%
   dplyr::mutate(ensgene = str_split(ensgene, '\\.', simplify=T)[, 1]) %>%
-  left_join(grch38) %>%
+  left_join(genes) %>%
   dplyr::select(-chr, -start, -end, -strand, -biotype, -description) %>%
   dplyr::select(symbol, ensgene, everything()) %>%
   dplyr::arrange(padj) %>%
@@ -58,7 +67,7 @@ map_df <- map_res %>%
     tibble::rownames_to_column(var = "ensgene") %>%
     as_tibble() %>%
     dplyr::mutate(ensgene = str_split(ensgene, '\\.', simplify=T)[, 1]) %>%
-    left_join(grch38) %>%
+    left_join(genes) %>%
     dplyr::select(-chr, -start, -end, -strand, -biotype, -description) %>%
     dplyr::select(symbol, ensgene, everything()) %>%
     dplyr::arrange(padj) %>%

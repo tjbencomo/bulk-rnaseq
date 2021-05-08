@@ -1,6 +1,6 @@
 # CSV file with sample information
 #samples: samples.csv
-samples: test.csv
+samples: metadata.csv
 
 # General Info
 # Specify 'salmon' or 'kallisto'
@@ -14,37 +14,33 @@ salmon_index: /home/groups/carilee/refs/salmon/default/
 kallisto_index: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcriptome.idx
 kallisto_threads: 4
 
-# NOTE: If you are analyzing single end reads these must be defined
-# mean RNA fragment length (not read length). Otherwise set to None
-single_end_frag_length: 200
+# NOTE: If you are analyzing single end reads with kallisto these must be defined
+# mean RNA fragment length (not read length). 
+# If you are using Salmon, they will be ignored 
+single_end_frag_length: None
 # standard deviation RNA fragment length
-single_end_frag_sd: 20
+single_end_frag_sd: None
 
 # Variables to color label PCA plot
 # Comma separated list of columns specified in samples.csv
 pca_labels: condition
 
 # Experimental Design
-design_formula: ~ libtype + condition
+# NOTE: Interaction designs currently not supported - use deseq2/all.rds and
+# write a script to run interaction design
+design_formula: ~ condition
+
 # Contrasts for DESeq2 to estimate
-# These must be ffor the last (right most) variable in the design_formula
+# These must be for the last (right most) variable in the design_formula
 # The specification is numerator-vs-denominator
 # Thus if you wanted to compare treated vs untreated samples with untreated
 # as the reference level, it would be treated-vs-untreated
 contrasts:
-    primary-vs-melanocytes:
-        - primary
-        - melanocytes
-    metastatic-vs-primary:
-        - metastatic
-        - primary
-    metastatic-vs-melanocytes:
-        - metastatic
-        - melanocytes
+    tumor-vs-normal:
+        - tumor
+        - normal
 # Factor level ordering for relevant variables in the design formula
 # The first value will be the reference level
 factor_levels:
-    sample: normal, tumor
-    condition: melanocytes, primary, metastatic
-    libtype: se, pe
+    condition: normal, tumor
 

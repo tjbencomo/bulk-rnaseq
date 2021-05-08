@@ -18,14 +18,14 @@ The same goes for using `conda` environments, although it is recommended to use 
 `bulk-rnaseq` requires you specify a CSV file with a metadata about samples to analyze. 
 There are several required columns:
 * `patient`
-* `sample`
+* `condition`
 * `fq1`
 * `fq2`
 * `strandedness` (required by `kallisto`; optional if using `salmon`)
 
-The `patient` and `sample` columns are used to create a sample specific ID for downstream processing and identification.
-The values specified in the these columns should create unique values when combined as `{patient}-{sample}`. 
-`sample` should specify the condition of the sample (ie `normal` or `tumor`). 
+The `patient` and `condition` columns are used to create a sample specific ID for downstream processing and identification.
+The values specified in the these columns should create unique values when combined as `{patient}-{condition}`. 
+`condition` should specify the experimental condition of the sample (`normal` or `tumor, `primary` or `metastatic` etc). 
 
 **NOTE** `salmon` will automatically infer the library stranding and choose the best option. `kallisto` requires you specify
 the stranding info. See [`check-strand`](https://github.com/tjbencomo/check-strand) to determine the proper stranding if you prefer to

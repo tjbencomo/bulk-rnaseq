@@ -33,9 +33,14 @@ txi <- tximport(files, type = quant_program, txOut = FALSE, tx2g = tx2g[, 1:2])
 # txi <- tximport(files, type = "kallisto", txOut = FALSE, tx2g = tx2g[, 1:2])
 
 samples <- read.csv(samples_fp)
-samples$id <- paste(samples$patient, "-", samples$sample, sep = "")
+print("First")
+print(samples)
+samples$id <- paste(samples$patient, "-", samples$condition, sep = "")
+print("Second")
+print(samples)
 # Reorder rows so they match files order
 samples <- samples[match(names(files), samples$id),]
+print("Third")
 print(files)
 print(samples)
 

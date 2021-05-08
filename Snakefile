@@ -8,7 +8,7 @@ from snakemake.utils import min_version
 configfile: "config.yaml"
 samples_fp = config['samples']
 samples = pd.read_csv(samples_fp, dtype=str)
-samples['id'] = samples['patient'] + '-' + samples['sample']
+samples['id'] = samples['patient'] + '-' + samples['condition']
 samples = samples.set_index(["id"], drop=False)
 samples = samples.sort_index()
 
@@ -151,6 +151,7 @@ rule deseq2_init:
         levels=var_levels
     log:
         "logs/deseq2/init.log"
+    threads: 2
     conda:
         "envs/deseq2.yml"
     script:
@@ -158,7 +159,8 @@ rule deseq2_init:
 
 rule diffexp:
     input:
-        "deseq2/all.rds"
+        "deseq2/all.rds",
+        tx2g = tx2g
     output:
         mleres = "results/{contrast}/mle_foldchanges.csv",
         mapres = "results/{contrast}/map_foldchanges.csv",

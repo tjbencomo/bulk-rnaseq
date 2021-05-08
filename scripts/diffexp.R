@@ -7,7 +7,6 @@ library(IHW)
 library(ggplot2)
 library(dplyr)
 library(stringr)
-library(annotables)
 
 if (snakemake@threads > 1) {
     library("BiocParallel")
@@ -17,25 +16,31 @@ if (snakemake@threads > 1) {
     parallel <- FALSE
 }
 
+t2g_fp <- snakemake@input[[2]]
+t2g <- readr::read_table2(t2g_fp, col_names = c("tx", "ensgene", "symbol"))
+t2g <- t2g %>%
+    dplyr::distinct(ensgene, symbol)
+
 dds <- readRDS(snakemake@input[[1]])
 
 print(dds)
 
+# Grab last variable at end of formula for contrasts
 design_formula <- snakemake@params[['formula']]
-s <- str_split(design_formula, '\\+', simplify=T)
-var <- str_trim(s[1, dim(s)[2]])
+s <- str_remove_all(design_formula, " |~")
+s <- str_split(s, "\\+")
+vars <- s[[1]]
+var <- vars[length(vars)]
 
 print(snakemake@params[['contrast']])
+print("Creating results for the following variable:")
+print(var)
 
 contrast_coef <- paste(c(var, snakemake@params[['contrast']][1], "vs", snakemake@params[['contrast']][2]), collapse="_")
-#mle_res <- results(dds, contrast=c(var, snakemake@params[['contrast']]),
-#                   filterFun=ihw, alpha = .05, parallel = parallel)
-# map_res <- lfcShrink(dds, contrast=c(var, snakemake@params[['contrast']]), type = "ashr",
-#                      parallel = parallel)
-mle_res <- results(dds, coef=contrast_coef, filterFun=ihw, alpha = .05, parallel = parallel)
+de_contrast <- c(var, snakemake@params[['contrast']][1], snakemake@params[['contrast']][2])
+
+mle_res <- results(dds, contrast=de_contrast, filterFun=ihw, alpha = .05, parallel = parallel)
 map_res <- lfcShrink(dds, coef=contrast_coef, type = "apeglm", parallel = parallel)
-
-
 
 print("MLE LFC:")
 print(mle_res)
@@ -45,19 +50,11 @@ print("MAP LFC:")
 print(map_res)
 print(summary(map_res))
 
-## Filter out duplicate genes from extra contigs/multiple genes on extra contigs/duplicates with different entrez ID
-contigs <- c(1:23, "X", "Y", "MT")
-genes <- grch38 %>%
-  filter(chr %in% contigs) %>%
-  distinct(ensgene, symbol, chr, start, end, strand, biotype, .keep_all = TRUE)
-
 mle_df <- mle_res %>%
   data.frame() %>%
   tibble::rownames_to_column(var = "ensgene") %>%
   as_tibble() %>%
-  dplyr::mutate(ensgene = str_split(ensgene, '\\.', simplify=T)[, 1]) %>%
-  left_join(genes) %>%
-  dplyr::select(-chr, -start, -end, -strand, -biotype, -description) %>%
+  left_join(t2g) %>%
   dplyr::select(symbol, ensgene, everything()) %>%
   dplyr::arrange(padj) %>%
   dplyr::distinct(symbol, .keep_all = TRUE)
@@ -66,9 +63,7 @@ map_df <- map_res %>%
     data.frame() %>%
     tibble::rownames_to_column(var = "ensgene") %>%
     as_tibble() %>%
-    dplyr::mutate(ensgene = str_split(ensgene, '\\.', simplify=T)[, 1]) %>%
-    left_join(genes) %>%
-    dplyr::select(-chr, -start, -end, -strand, -biotype, -description) %>%
+    left_join(t2g) %>%
     dplyr::select(symbol, ensgene, everything()) %>%
     dplyr::arrange(padj) %>%
     dplyr::distinct(symbol, .keep_all = TRUE)

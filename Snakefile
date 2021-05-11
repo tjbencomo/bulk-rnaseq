@@ -44,6 +44,11 @@ def get_fqs(wildcards):
         return {'fq' : samples.loc[(wildcards.sample_id), 'fq1']}
 
 def getStrand(wildcards):
+    if quant_program == 'salmon':
+        return 'Not using kallisto'
+    else:
+        if 'strandedness' not in samples.columns:
+            raise ValueError("Set to use kallisto for quantification but not stranding specified!")
     s = samples.loc[wildcards.sample_id, 'strandedness'].lower()
     if s == 'forward' or s == 'stranded':
         return '--fr-stranded'
@@ -87,7 +92,7 @@ def get_multiqc_input(wildcards):
 
 rule targets:
     input:
-        expand("kallisto/{sample_id}", sample_id=samples['id']),
+        expand("{program}/{sample_id}", program=quant_program, sample_id=samples['id']),
         expand("results/{contrast}/{estimate}_foldchanges.csv", contrast=config['contrasts'], estimate=['mle', 'map']),
         expand("results/{contrast}/{estimate}_ma.svg", contrast=config['contrasts'], estimate=['mle', 'map']),
         "results/pca_plot.svg",

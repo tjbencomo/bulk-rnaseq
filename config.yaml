@@ -28,6 +28,10 @@ pca_labels: condition
 # Experimental Design
 # NOTE: Interaction designs currently not supported - use deseq2/all.rds and
 # write a script to run interaction design
+# If you want to regress out patient specific affects, make sure the patient
+# variable is a character variable instead of a numeric type to avoid improper
+# coding. This can be done by ensuring the patient variable values have text and 
+# numbers
 design_formula: ~ condition
 
 # Contrasts for DESeq2 to estimate

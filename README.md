@@ -49,7 +49,7 @@ Results are stored in `results/` and include:
 
 Each contrast has its own folder in `results/` with the following files:
 * `mle_foldchanges.csv` - List of log2 fold changes estimated by DESeq2 using maximum likelihood estimation (MLE)
-* `map_foldchanges.csv` - List of log2 fold changes estimated by DESeq2 via shrinkage using the `ashr` package
+* `map_foldchanges.csv` - List of log2 fold changes estimated by DESeq2 via shrinkage using the `apeglm` package
 * `mle_ma.svg` - MA plot showing the MLE fold changes
 * `map_ma.svg` - MA plot showing the MAP fold changes
 

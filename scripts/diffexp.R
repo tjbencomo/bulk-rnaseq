@@ -36,6 +36,8 @@ print(snakemake@params[['contrast']])
 print("Creating results for the following variable:")
 print(var)
 
+print(resultsNames(dds))
+
 contrast_coef <- paste(c(var, snakemake@params[['contrast']][1], "vs", snakemake@params[['contrast']][2]), collapse="_")
 de_contrast <- c(var, snakemake@params[['contrast']][1], snakemake@params[['contrast']][2])
 

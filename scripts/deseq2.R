@@ -48,10 +48,11 @@ print(samples)
 vars <- snakemake@params[['levels']]
 var_levels <- str_split(vars, ';', simplify=T)
 for (var in var_levels) {
+    print(paste("Variable:", var))
     s <- str_split(var, '=|,', simplify=T)
     col <- s[1, 1]
     level_order = s[1, 2:dim(s)[2]]
-    samples[, col] <- factor(samples[, col])
+    samples[, col] <- factor(samples[, col], level_order)
 }
 
 f <- as.formula(design_formula)

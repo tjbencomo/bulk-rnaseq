@@ -25,7 +25,7 @@ There are several required columns:
 
 The `patient` and `condition` columns are used to create a sample specific ID for downstream processing and identification.
 The values specified in the these columns should create unique values when combined as `{patient}-{condition}`. 
-`condition` should specify the experimental condition of the sample (`normal` or `tumor, `primary` or `metastatic` etc). 
+`condition` should specify the experimental condition of the sample (`normal` or `tumor`, `primary` or `metastatic` etc). 
 
 **NOTE** `salmon` will automatically infer the library stranding and choose the best option. `kallisto` requires you specify
 the stranding info. See [`check-strand`](https://github.com/tjbencomo/check-strand) to determine the proper stranding if you prefer to

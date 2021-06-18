@@ -16,7 +16,8 @@ quant_program = config['quant_program']
 
 kallisto_idx = config['kallisto_index']
 tx2g = config['tx2gene']
-kallisto_threads = config['kallisto_threads']
+qthreads = config['quant_threads']
+dthreads = config['deseq_threads']
 se_frag_length = config['single_end_frag_length']
 se_frag_sd = config['single_end_frag_sd']
 salmon_idx = config['salmon_index']
@@ -114,7 +115,7 @@ rule kallisto:
         frag_sd = lambda wildcards: '' if isPE(wildcards) else f"-s {se_frag_sd}"
     log:
         "logs/kallisto/{sample_id}.log"
-    threads: 4
+    threads: qthreads
     conda:
         "envs/kallisto.yml"
     shell:
@@ -134,7 +135,7 @@ rule salmon:
         fqs = lambda wildcards, input: f"-r {input.fq}" if not isPE(wildcards) else f"-1 {input.fq1} -2 {input.fq2}"
     log:
         "logs/salmon/{sample_id}.log"
-    threads: 4
+    threads: qthreads
     conda:
         "envs/salmon.yml"
     shell:
@@ -156,7 +157,7 @@ rule deseq2_init:
         levels=var_levels
     log:
         "logs/deseq2/init.log"
-    threads: 2
+    threads: dthreads
     conda:
         "envs/deseq2.yml"
     script:
@@ -176,7 +177,7 @@ rule diffexp:
         contrast = get_contrast
     log:
         "logs/deseq2/{contrast}.log"
-    threads: 2
+    threads: dthreads
     conda:
         "envs/deseq2.yml"
     script:
@@ -185,8 +186,6 @@ rule diffexp:
 rule multiqc:
     input:
         get_multiqc_input
-        #expand("logs/{program}/{sample_id}.log", program = quant_program, sample_id=samples['id']),
-        #expand("qc/fastqc/{sample_id}", sample_id=samples['id'])
     output:
         "qc/multiqc_report.html"
     log:

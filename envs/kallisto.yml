@@ -1,4 +1,4 @@
-name: quant
+name: kallisto
 channels:
     - bioconda
     - conda-forge

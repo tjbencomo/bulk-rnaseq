@@ -1,10 +1,14 @@
 # CSV file with sample information
-#samples: samples.csv
-samples: metadata.csv
+samples: samples.csv
+# samples: metadata.csv
 
 # General Info
 # Specify 'salmon' or 'kallisto'
 quant_program: 'salmon'
+# Specify number of threads for quantification program (salmon or kallisto)
+quant_threads: 4
+# Specify number of threads for DESeq2
+deseq_threads: 4
 tx2gene: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcripts_to_genes.txt
 
 # Salmon Info
@@ -12,7 +16,6 @@ salmon_index: /home/groups/carilee/refs/salmon/default/
 
 # Kallisto Info
 kallisto_index: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcriptome.idx
-kallisto_threads: 4
 
 # NOTE: If you are analyzing single end reads with kallisto these must be defined
 # mean RNA fragment length (not read length). 

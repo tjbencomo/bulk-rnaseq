@@ -6,7 +6,7 @@ to normalize counts and detect DEGs.
 ## Installation
 1. Make sure `conda`, `mamba`, and `snakemake` are installed
 2. Download the appropriate [`kallisto`](https://github.com/pachterlab/kallisto-transcriptome-indices/releases) or  [`salmon`](http://refgenomes.databio.org) references or build your own
-3. Clone this repository or create new repository from this template
+3. Clone this repository or a create new repository from this template
 4. Describe your samples in `samples.csv`
 5. Modify the settings in `config.yaml`
 6. (Optional) If you plan on using a SLURM cluster, fill out the `#SBATCH` directives in `run_pipeline.sh` and the `out` and `account` fields in `cluster.json`

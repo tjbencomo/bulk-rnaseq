@@ -45,6 +45,9 @@ Run jobs on a SLURM cluster
 sbatch run_pipeline.sh [path to directory with Snakefile]
 ```
 
+**NOTE:** It is highly recommended you run `snakemake` with the `--use-conda` and `--use-singularity` flags for
+maximum reproducibility
+
 ## Output
 Results are stored in `results/` and include:
 * `normalized_counts.rds` - DESeq2 object with VST normalized log2 counts. Useful for downstream visualization, clustering, and machine learning

@@ -1,4 +1,4 @@
-singularity: "docker://continuumio/miniconda3"
+singularity: "docker://condaforge/mambaforge"
 
 import sys
 import pandas as pd
@@ -116,7 +116,7 @@ rule kallisto:
         "logs/kallisto/{sample_id}.log"
     threads: 4
     conda:
-        "envs/quant.yml"
+        "envs/kallisto.yml"
     shell:
         """
         kallisto quant -i {input.idx} -o {output} -t {threads} \

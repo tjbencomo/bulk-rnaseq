@@ -6,19 +6,19 @@
         "ncpus" : 1,
         "mem" : "8G",
         "partition" : "normal",
-        "out" : "/scratch/users/tbencomo/logs/bulk-rnaseq/slurm-{jobid}.out"
+        "out" : "/scratch/users/tbencomo/logs/test-mamba/slurm-{jobid}.out"
     },
     "kallisto" :
     {
-        "time" : "1:00:00",
+        "time" : "2:00:00",
         "ncpus" : 4,
         "mem" : "10G"
     },
     "salmon" :
     {
-        "time" : "2:00:00",
+        "time" : "6:00:00",
         "ncpus" : 4,
-        "mem" : "10G"
+        "mem" : "16G"
     },
     "deseq2_init" :
     {

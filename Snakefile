@@ -1,4 +1,5 @@
-singularity: "docker://condaforge/mambaforge"
+#singularity: "docker://condaforge/mambaforge"
+singularity: "docker://continuumio/miniconda3"
 
 import sys
 import pandas as pd

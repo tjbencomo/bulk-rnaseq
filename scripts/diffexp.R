@@ -16,10 +16,10 @@ if (snakemake@threads > 1) {
     parallel <- FALSE
 }
 
-t2g_fp <- snakemake@input[[2]]
-t2g <- readr::read_table2(t2g_fp, col_names = c("tx", "ensgene", "symbol"))
-t2g <- t2g %>%
-    dplyr::distinct(ensgene, symbol)
+# t2g_fp <- snakemake@input[[2]]
+# t2g <- readr::read_table2(t2g_fp, col_names = c("tx", "ensgene", "symbol"))
+# t2g <- t2g %>%
+#     dplyr::distinct(ensgene, symbol)
 
 dds <- readRDS(snakemake@input[[1]])
 
@@ -44,6 +44,14 @@ de_contrast <- c(var, snakemake@params[['contrast']][1], snakemake@params[['cont
 mle_res <- results(dds, contrast=de_contrast, filterFun=ihw, alpha = .05, parallel = parallel)
 map_res <- lfcShrink(dds, coef=contrast_coef, type = "apeglm", parallel = parallel)
 
+# Add gene symbols from rowData
+print("res and dds ensgenes match?")
+stopifnot(all(rownames(mle_res) == rownames(rowData(dds))))
+stopifnot(all(rownames(map_res) == rownames(rowData(dds))))
+print("Ensgenes match. Adding symbols to results dataframes")
+mle_res$symbol <- rowData(dds)$SYMBOL
+map_res$symbol <- rowData(dds)$SYMBOL
+
 print("MLE LFC:")
 print(mle_res)
 print(summary(mle_res))
@@ -56,7 +64,7 @@ mle_df <- mle_res %>%
   data.frame() %>%
   tibble::rownames_to_column(var = "ensgene") %>%
   as_tibble() %>%
-  left_join(t2g) %>%
+  # left_join(t2g) %>%
   dplyr::select(symbol, ensgene, everything()) %>%
   dplyr::arrange(padj) %>%
   dplyr::distinct(symbol, .keep_all = TRUE)
@@ -65,7 +73,7 @@ map_df <- map_res %>%
     data.frame() %>%
     tibble::rownames_to_column(var = "ensgene") %>%
     as_tibble() %>%
-    left_join(t2g) %>%
+    # left_join(t2g) %>%
     dplyr::select(symbol, ensgene, everything()) %>%
     dplyr::arrange(padj) %>%
     dplyr::distinct(symbol, .keep_all = TRUE)

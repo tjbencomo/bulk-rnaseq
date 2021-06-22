@@ -2,13 +2,14 @@ log <- file(snakemake@log[[1]], open="wt")
 sink(log)
 sink(log, type="message")
 
-library(tximport)
+library(tximeta)
 library(DESeq2)
 library(readr)
 library(stringr)
+library(org.Hs.eg.db)
 
 res_dirs <- snakemake@input[['cts']]
-tx2g_fp <- snakemake@input[['tx2g']]
+# tx2g_fp <- snakemake@input[['tx2g']]
 samples_fp <- snakemake@input[['samples']]
 quant_program <- snakemake@params[['aligner']]
 
@@ -27,10 +28,8 @@ if (quant_program == 'kallisto') {
 } else {
     files <- file.path(res_dirs, "quant.sf")
 }
+
 names(files) <- basename(dirname(files))
-tx2g <- read_table2(tx2g_fp, col_names = c("tx", "ensgene", "symbol"))
-txi <- tximport(files, type = quant_program, txOut = FALSE, tx2g = tx2g[, 1:2])
-# txi <- tximport(files, type = "kallisto", txOut = FALSE, tx2g = tx2g[, 1:2])
 
 samples <- read.csv(samples_fp)
 print("First")
@@ -44,6 +43,19 @@ print("Third")
 print(files)
 print(samples)
 
+samples$names <- samples$id
+samples$files <- files
+print(samples)
+
+se <- tximeta(samples)
+gse <- summarizeToGene(se)
+gse <- addIds(gse, "SYMBOL", gene = T)
+
+f <- as.formula(design_formula)
+dds <- DESeqDataSet(gse, design = f)
+print("Old ordering for condition")
+print(colData(dds)$condition)
+
 ## Ensure factor ordering based on config specifications
 vars <- snakemake@params[['levels']]
 var_levels <- str_split(vars, ';', simplify=T)
@@ -52,16 +64,12 @@ for (var in var_levels) {
     s <- str_split(var, '=|,', simplify=T)
     col <- s[1, 1]
     level_order = s[1, 2:dim(s)[2]]
-    samples[, col] <- factor(samples[, col], level_order)
+    colData(dds)[, col] <- factor(colData(dds)[, col], level_order)
+    print(paste("Ordering for", col))
+    print(levels(colData(dds)[, col]))
 }
 
-f <- as.formula(design_formula)
-ddsTxi <- DESeqDataSetFromTximport(txi, colData = samples, design = f)
-
-keep <- rowSums(counts(ddsTxi)) >= 1
-ddsTxi <- ddsTxi[keep, ]
-
-dds <- DESeq(ddsTxi, parallel=parallel)
+dds <- DESeq(dds, parallel=parallel)
 print(dds)
 
 vst_cts <- vst(dds, blind=FALSE)

@@ -6,8 +6,10 @@ dependencies:
     - bioconductor-deseq2
     - bioconductor-tximport
     - bioconductor-apeglm
+    - bioconductor-org.hs.eg.db
     - bioconductor-rhdf5
     - bioconductor-ihw
+    - bioconductor-tximeta
     - r-ashr
     - r-annotables
     - r-readr

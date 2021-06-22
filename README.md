@@ -17,6 +17,10 @@ The same goes for using `conda` environments, although it is recommended to use 
 `snakemake` recommends the `mamba` installer instead of `conda` because of `mamba`'s better performance. See the [documentation](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) for installing `mamba`. If you prefer to use `conda`, see the `snakemake`
 command line arguments to install environments using `conda`.
 
+## Salmon vs Kallisto
+I recommend using `salmon` for quantification as it automatically infers the library strandedness and supports automatic gene annotation via `tximeta`.
+If you prefer to use `kallisto`, make sure to specify the strandedness in the sample file.
+
 ## Sample File Configuration
 `bulk-rnaseq` requires you specify a CSV file with a metadata about samples to analyze. 
 There are several required columns:

@@ -16,7 +16,6 @@ samples = samples.sort_index()
 quant_program = config['quant_program']
 
 kallisto_idx = config['kallisto_index']
-tx2g = config['tx2gene']
 qthreads = config['quant_threads']
 dthreads = config['deseq_threads']
 se_frag_length = config['single_end_frag_length']

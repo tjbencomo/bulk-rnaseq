@@ -1,18 +1,18 @@
 # CSV file with sample information
-samples: samples.csv
+samples: tomas_samples.csv
 # samples: metadata.csv
 
 # General Info
 # Specify 'salmon' or 'kallisto'
 quant_program: 'salmon'
 # Specify number of threads for quantification program (salmon or kallisto)
-quant_threads: 4
+quant_threads: 6
 # Specify number of threads for DESeq2
-deseq_threads: 4
+deseq_threads: 2
 tx2gene: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcripts_to_genes.txt
 
 # Salmon Info
-salmon_index: /home/groups/carilee/refs/salmon/default/
+salmon_index: /home/groups/carilee/refs/rnaseq-refs/hg38/salmon_index
 
 # Kallisto Info
 kallisto_index: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcriptome.idx
@@ -35,7 +35,7 @@ pca_labels: condition
 # variable is a character variable instead of a numeric type to avoid improper
 # coding. This can be done by ensuring the patient variable values have text and 
 # numbers
-design_formula: ~ condition
+design_formula: ~ dataset + condition
 
 # Contrasts for DESeq2 to estimate
 # These must be for the last (right most) variable in the design_formula
@@ -49,5 +49,5 @@ contrasts:
 # Factor level ordering for relevant variables in the design formula
 # The first value will be the reference level
 factor_levels:
-    condition: normal, tumor
+    condition: normal, AK, tumor
 

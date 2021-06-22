@@ -16,11 +16,6 @@ if (snakemake@threads > 1) {
     parallel <- FALSE
 }
 
-# t2g_fp <- snakemake@input[[2]]
-# t2g <- readr::read_table2(t2g_fp, col_names = c("tx", "ensgene", "symbol"))
-# t2g <- t2g %>%
-#     dplyr::distinct(ensgene, symbol)
-
 dds <- readRDS(snakemake@input[[1]])
 
 print(dds)
@@ -64,7 +59,6 @@ mle_df <- mle_res %>%
   data.frame() %>%
   tibble::rownames_to_column(var = "ensgene") %>%
   as_tibble() %>%
-  # left_join(t2g) %>%
   dplyr::select(symbol, ensgene, everything()) %>%
   dplyr::arrange(padj) %>%
   dplyr::distinct(symbol, .keep_all = TRUE)
@@ -73,7 +67,6 @@ map_df <- map_res %>%
     data.frame() %>%
     tibble::rownames_to_column(var = "ensgene") %>%
     as_tibble() %>%
-    # left_join(t2g) %>%
     dplyr::select(symbol, ensgene, everything()) %>%
     dplyr::arrange(padj) %>%
     dplyr::distinct(symbol, .keep_all = TRUE)

@@ -9,7 +9,6 @@ quant_program: 'salmon'
 quant_threads: 6
 # Specify number of threads for DESeq2
 deseq_threads: 2
-tx2gene: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcripts_to_genes.txt
 
 # Salmon Info
 salmon_index: /home/groups/carilee/refs/rnaseq-refs/hg38/salmon_index

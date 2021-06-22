@@ -147,8 +147,7 @@ rule salmon:
 rule deseq2_init:
     input:
         unpack(get_quants),
-        samples=samples_fp,
-        tx2g = tx2g
+        samples=samples_fp
     output:
         deseq="deseq2/all.rds",
         cts="results/normalized_counts.rds"
@@ -166,8 +165,7 @@ rule deseq2_init:
 
 rule diffexp:
     input:
-        "deseq2/all.rds",
-        tx2g = tx2g
+        "deseq2/all.rds"
     output:
         mleres = "results/{contrast}/mle_foldchanges.csv",
         mapres = "results/{contrast}/map_foldchanges.csv",

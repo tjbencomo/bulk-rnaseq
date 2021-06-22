@@ -9,7 +9,6 @@ library(stringr)
 library(org.Hs.eg.db)
 
 res_dirs <- snakemake@input[['cts']]
-# tx2g_fp <- snakemake@input[['tx2g']]
 samples_fp <- snakemake@input[['samples']]
 quant_program <- snakemake@params[['aligner']]
 

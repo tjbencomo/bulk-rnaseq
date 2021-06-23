@@ -11,8 +11,9 @@ to normalize counts and detect DEGs.
 5. Modify the settings in `config.yaml`
 6. (Optional) If you plan on using a SLURM cluster, fill out the `#SBATCH` directives in `run_pipeline.sh` and the `out` and `account` fields in `cluster.json`. The `out` path must already exist; Snakemake will not create directories for you
 8. (Optional) If you want to run the pipeline in a Singularity environment for full reproducibility, install Singularity. 
-`run_pipeline` assumes Singularity is installed. Delete the `--use-singularity` flag if you want to skip using a Singularity environment.
+`run_pipeline.sh` assumes Singularity is installed. Delete the `--use-singularity` flag if you want to skip using a Singularity environment.
 The same goes for using `conda` environments, although it is recommended to use both for the best reproducibility.
+
 ### conda vs mamba
 `snakemake` recommends the `mamba` installer instead of `conda` because of `mamba`'s better performance. See the [documentation](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) for installing `mamba`. If you prefer to use `conda`, see the `snakemake`
 command line arguments to install environments using `conda`.
@@ -65,5 +66,5 @@ Each contrast has its own folder in `results/` with the following files:
 
 The full DESeq2 object used for differential expression analysis can be found in `deseq2/`.
 
-A MultiQC html report with `kallisto` statistics for each sample is located in `qc/`. 
+A MultiQC html report with quantification statistics and FASTQC reports for each sample is located in `qc/`. 
 Check this to verify a reasonable proportion of reads were pseudoaligned.

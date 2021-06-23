@@ -2,6 +2,9 @@ log <- file(snakemake@log[[1]], open="wt")
 sink(log)
 sink(log, type="message")
 
+# Handle readr tzdata bug when using singularity mambaforge container
+Sys.setenv("TZDIR"=paste0(Sys.getenv("CONDA_PREFIX"), "/share/zoneinfo"))
+
 library(DESeq2)
 library(IHW)
 library(ggplot2)

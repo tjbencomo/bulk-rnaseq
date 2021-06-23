@@ -9,8 +9,8 @@ to normalize counts and detect DEGs.
 3. Clone this repository or a create new repository from this template
 4. Describe your samples in `samples.csv`
 5. Modify the settings in `config.yaml`
-6. (Optional) If you plan on using a SLURM cluster, fill out the `#SBATCH` directives in `run_pipeline.sh` and the `out` and `account` fields in `cluster.json`
-7. (Optional) If you want to run the pipeline in a Singularity environment for full reproducibility, install Singularity. 
+6. (Optional) If you plan on using a SLURM cluster, fill out the `#SBATCH` directives in `run_pipeline.sh` and the `out` and `account` fields in `cluster.json`. The `out` path must already exist; Snakemake will not create directories for you
+8. (Optional) If you want to run the pipeline in a Singularity environment for full reproducibility, install Singularity. 
 `run_pipeline` assumes Singularity is installed. Delete the `--use-singularity` flag if you want to skip using a Singularity environment.
 The same goes for using `conda` environments, although it is recommended to use both for the best reproducibility.
 ### conda vs mamba

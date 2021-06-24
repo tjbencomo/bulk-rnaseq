@@ -19,3 +19,4 @@ dependencies:
     - r-svglite
     - libiconv
     - mscorefonts
+    - tzdata

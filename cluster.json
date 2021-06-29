@@ -1,12 +1,12 @@
 {
     "__default__" :
     {
-        "account" : "tbencomo",
+        "account" : 
         "time" : "01:00:00",
         "ncpus" : 1,
         "mem" : "8G",
         "partition" : "normal",
-        "out" : "/scratch/users/tbencomo/logs/combined-scc/slurm-{jobid}.out"
+        "out" : 
     },
     "kallisto" :
     {

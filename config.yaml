@@ -1,5 +1,5 @@
 # CSV file with sample information
-samples: tomas_samples.csv
+samples: samples2.csv
 # samples: metadata.csv
 
 # General Info
@@ -34,7 +34,7 @@ pca_labels: condition
 # variable is a character variable instead of a numeric type to avoid improper
 # coding. This can be done by ensuring the patient variable values have text and 
 # numbers
-design_formula: ~ dataset + condition
+design_formula: ~ condition
 
 # Contrasts for DESeq2 to estimate
 # These must be for the last (right most) variable in the design_formula
@@ -42,11 +42,11 @@ design_formula: ~ dataset + condition
 # Thus if you wanted to compare treated vs untreated samples with untreated
 # as the reference level, it would be treated-vs-untreated
 contrasts:
-    tumor-vs-normal:
-        - tumor
-        - normal
+    KO-vs-WT:
+        - KO
+        - WT
 # Factor level ordering for relevant variables in the design formula
 # The first value will be the reference level
 factor_levels:
-    condition: normal, AK, tumor
+    condition: WT, KO
 

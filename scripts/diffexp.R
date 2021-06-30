@@ -63,16 +63,14 @@ mle_df <- mle_res %>%
   tibble::rownames_to_column(var = "ensgene") %>%
   as_tibble() %>%
   dplyr::select(symbol, ensgene, everything()) %>%
-  dplyr::arrange(padj) %>%
-  dplyr::distinct(symbol, .keep_all = TRUE)
+  dplyr::arrange(padj)
 
 map_df <- map_res %>%
     data.frame() %>%
     tibble::rownames_to_column(var = "ensgene") %>%
     as_tibble() %>%
     dplyr::select(symbol, ensgene, everything()) %>%
-    dplyr::arrange(padj) %>%
-    dplyr::distinct(symbol, .keep_all = TRUE)
+    dplyr::arrange(padj)
 
 print("MLE dataframe")
 print(mle_df)

@@ -45,8 +45,9 @@ print("Third")
 print(files)
 print(samples)
 
-samples$names <- samples$id
+samples$names <- names(files)
 samples$files <- files
+stopifnot(all(samples$id == samples$names))
 print(samples)
 
 se <- tximeta(samples)

@@ -35,6 +35,12 @@ design_formula = config['design_formula']
 
 pca_labels = config['pca_labels'].replace(" ", "")
 
+salmon_env = config['salmon_container']
+kallisto_env = config['kallisto_container']
+fastqc_env = config['fastqc_container']
+multiqc_env = config['multiqc_container']
+r_env = config['r_container']
+
 def get_fqs(wildcards):
     if isPE(wildcards):
         return {
@@ -116,8 +122,7 @@ rule kallisto:
     log:
         "logs/kallisto/{sample_id}.log"
     threads: qthreads
-    conda:
-        "envs/kallisto.yml"
+    singularity: kallisto_env
     shell:
         """
         kallisto quant -i {input.idx} -o {output} -t {threads} \
@@ -136,8 +141,7 @@ rule salmon:
     log:
         "logs/salmon/{sample_id}.log"
     threads: qthreads
-    conda:
-        "envs/salmon.yml"
+    singularity: salmon_env 
     shell:
         """
         salmon quant -i {input.idx} -l A {params.fqs} -p {threads} -o {output}
@@ -157,8 +161,7 @@ rule deseq2_init:
     log:
         "logs/deseq2/init.log"
     threads: dthreads
-    conda:
-        "envs/deseq2.yml"
+    singularity: r_env 
     script:
         "scripts/deseq2.R"
 
@@ -176,8 +179,7 @@ rule diffexp:
     log:
         "logs/deseq2/{contrast}.log"
     threads: dthreads
-    conda:
-        "envs/deseq2.yml"
+    singularity: r_env
     script:
         "scripts/diffexp.R"
 
@@ -188,8 +190,7 @@ rule multiqc:
         "qc/multiqc_report.html"
     log:
         "logs/multiqc.log"
-    conda:
-        "envs/qc.yml"
+    singularity: multiqc_env 
     wrapper:
         "0.50.4/bio/multiqc"
 
@@ -202,8 +203,7 @@ rule pca:
         label_vars = pca_labels
     log:
         "logs/plot_pca.log"
-    conda:
-        "envs/deseq2.yml"
+    singularity: r_env
     script:
         "scripts/plot_pca.R"
 
@@ -212,8 +212,7 @@ rule fastqc:
         unpack(get_fqs)
     output:
         directory("qc/fastqc/{sample_id}")
-    conda:
-        "envs/qc.yml"
+    singularity: fastqc_env
     log:
         "logs/fastqc/{sample_id}.log"
     shell:

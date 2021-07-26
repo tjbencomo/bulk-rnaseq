@@ -1,12 +1,18 @@
 # CSV file with sample information
-samples: samples2.csv
+samples: samples.csv
 # samples: metadata.csv
+
+# SLURM Log File
+# # Set directory to save slurm log files (if using cluster execution)
+# # This can be an absolute or relative path
+# # If the directory doesn't exist the pipeline will create it
+slurm_log_dir: slurm-logs
 
 # General Info
 # Specify 'salmon' or 'kallisto'
 quant_program: 'salmon'
 # Specify number of threads for quantification program (salmon or kallisto)
-quant_threads: 6
+quant_threads: 4
 # Specify number of threads for DESeq2
 deseq_threads: 2
 
@@ -42,13 +48,13 @@ design_formula: ~ condition
 # Thus if you wanted to compare treated vs untreated samples with untreated
 # as the reference level, it would be treated-vs-untreated
 contrasts:
-    KO-vs-WT:
-        - KO
-        - WT
+    SCC-vs-NormalSkin:
+        - SCC
+        - NormalSkin
 # Factor level ordering for relevant variables in the design formula
 # The first value will be the reference level
 factor_levels:
-    condition: WT, KO
+    condition: NormalSkin, SCC
 
 ## Singularity Containers
 ### This specifies the container to use for various steps in the pipeline
@@ -57,5 +63,5 @@ salmon_container: https://depot.galaxyproject.org/singularity/salmon:1.5.1--h84f
 kallisto_container: https://depot.galaxyproject.org/singularity/kallisto:0.46.2--h60f4f9f_2
 fastqc_container: https://depot.galaxyproject.org/singularity/fastqc:0.11.9--hdfd78af_1
 multiqc_container: https://depot.galaxyproject.org/singularity/multiqc:1.11--pyhdfd78af_0
-r_container:
+r_container: docker://tbencomo/deseq2
 

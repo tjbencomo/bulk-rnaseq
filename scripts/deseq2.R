@@ -48,6 +48,7 @@ print(samples)
 samples$names <- names(files)
 samples$files <- files
 stopifnot(all(samples$id == samples$names))
+stopifnot(all(samples$names == basename(dirname(samples$files))))
 print(samples)
 
 se <- tximeta(samples)

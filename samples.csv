@@ -1,7 +1,5 @@
 patient,condition,fq1,fq2
-P1,WT,CTR1_ATTACTCG-GTACTGAC_L008_R1.fastq.gz,CTR1_ATTACTCG-GTACTGAC_L008_R2.fastq.gz
-P2,WT,CTR2_TCCGGAGA-GTACTGAC_L008_R1.fastq.gz,CTR2_TCCGGAGA-GTACTGAC_L008_R2.fastq.gz
-P3,WT,CTR3_CGCTCATT-GTACTGAC_L008_R1.fastq.gz,CTR3_CGCTCATT-GTACTGAC_L008_R2.fastq.gz
-P4,KO,sgA_GAGATTCC-GTACTGAC_L008_R1.fastq.gz,sgA_GAGATTCC-GTACTGAC_L008_R2.fastq.gz
-P5,KO,sgB_ATTCAGAA-GTACTGAC_L008_R1.fastq.gz,sgB_ATTCAGAA-GTACTGAC_L008_R2.fastq.gz
-P6,KO,sgC_GAATTCGT-GTACTGAC_L008_R1.fastq.gz,sgC_GAATTCGT-GTACTGAC_L008_R2.fastq.gz
+P1,NormalSkin,data/ctrl_93_1_short.fq.gz,data/ctrl_93_2_short.fq.gz
+P1,SCC,data/scc_93_1_short.fq.gz,data/scc_93_2_short.fq.gz
+P2,NormalSkin,data/ctrl_100_1_short.fq.gz,data/ctrl_100_2_short.fq.gz
+P2,SCC,data/scc_100_1_short.fq.gz,data/scc_100_2_short.fq.gz

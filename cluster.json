@@ -1,24 +1,26 @@
 {
     "__default__" :
     {
-        "account" : 
+        "account" :  ,
         "time" : "01:00:00",
         "ncpus" : 1,
         "mem" : "8G",
         "partition" : "normal",
-        "out" : 
+        "out" : "{logpath}/{rule}-{jobid}.out"
     },
     "kallisto" :
     {
         "time" : "2:00:00",
         "ncpus" : 4,
-        "mem" : "10G"
+        "mem" : "10G",
+        "out" : "{logpath}/{rule}-{sample_id}.out"
     },
     "salmon" :
     {
-        "time" : "10:00:00",
-        "ncpus" : 6,
-        "mem" : "24G"
+        "time" : "3:00:00",
+        "ncpus" : 4,
+        "mem" : "10G",
+        "out" : "{logpath}/{rule}-{sample_id}.out"
     },
     "deseq2_init" :
     {
@@ -43,5 +45,12 @@
         "time" : "00:30:00",
         "ncpus" : 1,
         "mem" : "2G"
+    },
+    "fastqc" :
+    {
+        "time" : "02:00:00",
+        "ncpus" : 1,
+        "mem" : "8G",
+        "out" : "{logpath}/{rule}-{sample_id}.out"
     }
 } 

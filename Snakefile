@@ -3,6 +3,7 @@ singularity: "docker://condaforge/mambaforge"
 
 import sys
 import pandas as pd
+from pathlib import Path
 from snakemake.utils import validate
 from snakemake.utils import min_version
 
@@ -12,6 +13,11 @@ samples = pd.read_csv(samples_fp, dtype=str)
 samples['id'] = samples['patient'] + '-' + samples['condition']
 samples = samples.set_index(["id"], drop=False)
 samples = samples.sort_index()
+
+# Logs
+slurm_logdir = config['slurm_log_dir']
+logpath = Path(slurm_logdir)
+logpath.mkdir(parents=True, exist_ok=True) 
 
 quant_program = config['quant_program']
 

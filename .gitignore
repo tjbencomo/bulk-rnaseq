@@ -7,3 +7,6 @@ kallisto/
 /results
 .cache/
 .conda/
+.java/
+salmon/
+qc/

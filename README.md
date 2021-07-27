@@ -4,23 +4,16 @@ from bulk RNAseq samples. The pipeline uses `kallisto` or `salmon` to quantify t
 to normalize counts and detect DEGs. 
 
 ## Installation
-1. Make sure `conda`, `mamba`, and `snakemake` are installed
+1. Install Singularity and `snakemake`
 2. Download the appropriate [`kallisto`](https://github.com/pachterlab/kallisto-transcriptome-indices/releases) or  [`salmon`](http://refgenomes.databio.org) references or build your own
 3. Clone this repository or a create new repository from this template
 4. Describe your samples in `samples.csv`
 5. Modify the settings in `config.yaml`
-6. (Optional) If you plan on using a SLURM cluster, fill out the `#SBATCH` directives in `run_pipeline.sh` and the `out` and `account` fields in `cluster.json`. The `out` path must already exist; Snakemake will not create directories for you
-8. (Optional) If you want to run the pipeline in a Singularity environment for full reproducibility, install Singularity. 
-`run_pipeline.sh` assumes Singularity is installed. Delete the `--use-singularity` flag if you want to skip using a Singularity environment.
-The same goes for using `conda` environments, although it is recommended to use both for the best reproducibility.
-
-### conda vs mamba
-`snakemake` recommends the `mamba` installer instead of `conda` because of `mamba`'s better performance. See the [documentation](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) for installing `mamba`. If you prefer to use `conda`, see the `snakemake`
-command line arguments to install environments using `conda`.
+6. (Optional) If you plan on using a SLURM cluster, fill out the `#SBATCH` directives in `run_pipeline.sh` and the `account` field in `cluster.json`. 
 
 ## Salmon vs Kallisto
 I recommend using `salmon` for quantification as it automatically infers the library strandedness and supports automatic gene annotation via `tximeta`.
-If you prefer to use `kallisto`, make sure to specify the strandedness in the sample file.
+If you prefer to use `kallisto`, make sure to specify the strandedness in the samples file.
 
 ## Sample File Configuration
 `bulk-rnaseq` requires you specify a CSV file with a metadata about samples to analyze. 
@@ -43,15 +36,12 @@ run `kallisto`.
 ## Running the pipeline
 Run jobs locally
 ```
-snakemake -j [cores] --use-singularity --use-conda
+snakemake -j [cores] --use-singularity
 ```
 Run jobs on a SLURM cluster
 ```
 sbatch run_pipeline.sh [path to directory with Snakefile]
 ```
-
-**NOTE:** It is highly recommended you run `snakemake` with the `--use-conda` and `--use-singularity` flags for
-maximum reproducibility
 
 ## Output
 Results are stored in `results/` and include:

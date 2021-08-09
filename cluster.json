@@ -13,14 +13,14 @@
         "time" : "2:00:00",
         "ncpus" : 4,
         "mem" : "10G",
-        "out" : "{logpath}/{rule}-{sample_id}.out"
+        "out" : "{logpath}/{rule}-{wildcards.sample_id}.out"
     },
     "salmon" :
     {
         "time" : "3:00:00",
         "ncpus" : 4,
         "mem" : "10G",
-        "out" : "{logpath}/{rule}-{sample_id}.out"
+        "out" : "{logpath}/{rule}-{wildcards.sample_id}.out"
     },
     "deseq2_init" :
     {
@@ -51,6 +51,6 @@
         "time" : "02:00:00",
         "ncpus" : 1,
         "mem" : "8G",
-        "out" : "{logpath}/{rule}-{sample_id}.out"
+        "out" : "{logpath}/{rule}-{wildcards.sample_id}.out"
     }
 } 

@@ -12,5 +12,5 @@ set -e
 cd $1
 echo "Starting up snakemake..."
 snakemake --cluster-config cluster.json -j 499 \
-    --use-conda --use-singularity \
+    --use-singularity \
     --cluster 'sbatch -p {cluster.partition} -t {cluster.time} --mem {cluster.mem} -c {cluster.ncpus} -o {cluster.out}'

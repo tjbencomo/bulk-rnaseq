@@ -59,7 +59,7 @@ factor_levels:
 ## Singularity Containers
 ### This specifies the container to use for various steps in the pipeline
 ### The value can be any string (either local path or url) that can be queried using singularity pull
-salmon_container: https://depot.galaxyproject.org/singularity/salmon:1.6.0--h84f40af_0
+salmon_container: https://depot.galaxyproject.org/singularity/salmon:1.8.0--h7e5ed60_1 
 kallisto_container: https://depot.galaxyproject.org/singularity/kallisto:0.46.2--h60f4f9f_2
 fastqc_container: https://depot.galaxyproject.org/singularity/fastqc:0.11.9--hdfd78af_1
 multiqc_container: https://depot.galaxyproject.org/singularity/multiqc:1.11--pyhdfd78af_0

@@ -46,7 +46,9 @@ sbatch run_pipeline.sh [path to directory with Snakefile]
 ```
 
 ## Output
-Results are stored in `results/` and include:
+The workflow performs differential expression on a transcript-level and gene-level basis.
+
+Results are stored in `results/[gene|transcript]-level` and include:
 * `normalized_counts.rds` - DESeq2 object with VST normalized log2 counts. Useful for downstream visualization, clustering, and machine learning
 * `pca_plot.svg` - Plot of the samples described by the first two principal components. Useful to check for batch effects and identify bad samples
 

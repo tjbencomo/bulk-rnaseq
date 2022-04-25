@@ -11,20 +11,20 @@
     "salmon" :
     {
         "time" : "3:00:00",
-        "ncpus" : 4,
+        "ncpus" : "{qthreads}",
         "mem" : "10G",
         "out" : "{logpath}/{rule}-{wildcards.sample_id}.out"
     },
     "deseq2_init" :
     {
         "time" : "1:00:00",
-        "npcus" : 2,
+        "npcus" : "{dthreads}",
         "mem" : "16G"
     },
     "diffexp" :
     {
         "time" : "00:30:00",
-        "ncpus" : 2,
+        "ncpus" : "{dthreads}",
         "mem" : "16G"
     },
     "pca" :

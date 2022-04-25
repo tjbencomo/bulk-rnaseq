@@ -25,26 +25,26 @@ if (snakemake@threads > 1) {
     parallel <- FALSE
 }
 
-if (quant_program == 'kallisto') {
-    files <- file.path(res_dirs, "abundance.h5")
-} else {
+if (quant_program == 'salmon') {
     files <- file.path(res_dirs, "quant.sf")
+} else{
+    print("quant_program wasn't Salmon!")
+    stop()
 }
 
 names(files) <- basename(dirname(files))
 
 samples <- read.csv(samples_fp)
-print("First")
-print(samples)
 samples$id <- paste(samples$patient, "-", samples$condition, sep = "")
-print("Second")
+print("First")
 print(samples)
 # Reorder rows so they match files order
 samples <- samples[match(names(files), samples$id),]
-print("Third")
+print("Second")
 print(files)
 print(samples)
 
+# Check that matching worked
 samples$names <- names(files)
 samples$files <- files
 stopifnot(all(samples$id == samples$names))
@@ -53,9 +53,41 @@ print(samples)
 
 se <- tximeta(samples)
 gse <- summarizeToGene(se)
+se <- addIds(se, "SYMBOL", gene = T)
 gse <- addIds(gse, "SYMBOL", gene = T)
-
 f <- as.formula(design_formula)
+
+## Tx-level
+print("Building DESeq object for transcript-level features")
+ddstx <- DESeqDataSet(se, design = f)
+print("Old ordering for condition")
+print(colData(ddstx)$condition)
+
+## Ensure factor ordering based on config specifications
+vars <- snakemake@params[['levels']]
+var_levels <- str_split(vars, ';', simplify=T)
+for (var in var_levels) {
+    print(paste("Variable:", var))
+    s <- str_split(var, '=|,', simplify=T)
+    col <- s[1, 1]
+    level_order = s[1, 2:dim(s)[2]]
+    colData(ddstx)[, col] <- factor(colData(ddstx)[, col], level_order)
+    print(paste("Ordering for", col))
+    print(levels(colData(ddstx)[, col]))
+}
+
+ddstx <- DESeq(ddstx, parallel=parallel)
+print(ddstx)
+
+vst_tx <- vst(ddstx, blind=FALSE)
+print(vst_tx)
+
+saveRDS(ddstx, file=snakemake@output[['deseq_tx']])
+saveRDS(vst_tx, file=snakemake@output[['cts_tx']])
+
+
+## Gene-level
+print("Building DESeq object for gene-level features")
 dds <- DESeqDataSet(gse, design = f)
 print("Old ordering for condition")
 print(colData(dds)$condition)

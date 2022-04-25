@@ -26,19 +26,19 @@
     {
         "time" : "1:00:00",
         "npcus" : 2,
-        "mem" : "8G"
+        "mem" : "16G"
     },
     "diffexp" :
     {
         "time" : "00:30:00",
         "ncpus" : 2,
-        "mem" : "8G"
+        "mem" : "16G"
     },
     "pca" :
     {
         "time" : "00:15:00",
         "ncpus" : 1,
-        "mem" : "8G"
+        "mem" : "16G"
     },
     "multiqc" :
     {

@@ -9,25 +9,18 @@ samples: samples.csv
 slurm_log_dir: slurm-logs
 
 # General Info
-# Specify 'salmon' or 'kallisto'
-quant_program: 'salmon'
 # Specify number of threads for quantification program (salmon or kallisto)
 quant_threads: 4
 # Specify number of threads for DESeq2
 deseq_threads: 2
 
 # Salmon Info
+# Location to folder with salmon index file data
 salmon_index: /home/groups/carilee/refs/rnaseq-refs/hg38/salmon_index
-
-# Kallisto Info
-kallisto_index: /home/groups/carilee/refs/rnaseq-hg38/kallisto-indexes/homo_sapiens/transcriptome.idx
-
-# NOTE: If you are analyzing single end reads with kallisto these must be defined
-# mean RNA fragment length (not read length). 
-# If you are using Salmon, they will be ignored 
-single_end_frag_length: None
-# standard deviation RNA fragment length
-single_end_frag_sd: None
+# Whether Salmon should compute 100 inferential replicates using Gibbs sampling
+# Replicates are useful for Terminus to quantify transcript uncertainty
+# Value should be true or false
+salmon_compute_replicates: true
 
 # Variables to color label PCA plot
 # Comma separated list of columns specified in samples.csv

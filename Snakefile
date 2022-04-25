@@ -19,14 +19,16 @@ slurm_logdir = config['slurm_log_dir']
 logpath = Path(slurm_logdir)
 logpath.mkdir(parents=True, exist_ok=True) 
 
-quant_program = config['quant_program']
+# quant_program = config['quant_program']
+quant_program = 'salmon'
 
-kallisto_idx = config['kallisto_index']
+# kallisto_idx = config['kallisto_index']
 qthreads = config['quant_threads']
 dthreads = config['deseq_threads']
-se_frag_length = config['single_end_frag_length']
-se_frag_sd = config['single_end_frag_sd']
+# se_frag_length = config['single_end_frag_length']
+# se_frag_sd = config['single_end_frag_sd']
 salmon_idx = config['salmon_index']
+salmon_add_reps = config['salmon_compute_replicates']
 
 # parse factor levels into readable string format
 # pass this string as param to deseq2_init.R
@@ -42,7 +44,7 @@ design_formula = config['design_formula']
 pca_labels = config['pca_labels'].replace(" ", "")
 
 salmon_env = config['salmon_container']
-kallisto_env = config['kallisto_container']
+# kallisto_env = config['kallisto_container']
 fastqc_env = config['fastqc_container']
 multiqc_env = config['multiqc_container']
 r_env = config['r_container']
@@ -56,21 +58,21 @@ def get_fqs(wildcards):
     else:
         return {'fq' : samples.loc[(wildcards.sample_id), 'fq1']}
 
-def getStrand(wildcards):
-    if quant_program == 'salmon':
-        return 'Not using kallisto'
-    else:
-        if 'strandedness' not in samples.columns:
-            raise ValueError("Set to use kallisto for quantification but not stranding specified!")
-    s = samples.loc[wildcards.sample_id, 'strandedness'].lower()
-    if s == 'forward' or s == 'stranded':
-        return '--fr-stranded'
-    elif s == 'reverse':
-        return '--rf-stranded'
-    elif s == 'none' or s == 'unstranded':
-        return ''
-    else:
-        raise ValueError(f"Unrecognized strand type for {wildcards.sample_id}")
+# def getStrand(wildcards):
+#     if quant_program == 'salmon':
+#         return 'Not using kallisto'
+#     else:
+#         if 'strandedness' not in samples.columns:
+#             raise ValueError("Set to use kallisto for quantification but not stranding specified!")
+#     s = samples.loc[wildcards.sample_id, 'strandedness'].lower()
+#     if s == 'forward' or s == 'stranded':
+#         return '--fr-stranded'
+#     elif s == 'reverse':
+#         return '--rf-stranded'
+#     elif s == 'none' or s == 'unstranded':
+#         return ''
+#     else:
+#         raise ValueError(f"Unrecognized strand type for {wildcards.sample_id}")
 
 def isPE(wildcards):
     if pd.isna(samples.loc[wildcards.sample_id, 'fq2']):
@@ -79,22 +81,22 @@ def isPE(wildcards):
         return True
 
 def get_quants(wildcards):
-    if quant_program == 'kallisto':
-        quants = [f"kallisto/{sid}" for sid in samples['id']]
-    elif quant_program == 'salmon':
+    # if quant_program == 'kallisto':
+        # quants = [f"kallisto/{sid}" for sid in samples['id']]
+    if quant_program == 'salmon':
         quants = [f"salmon/{sid}" for sid in samples['id']]
     else:
-        raise ValueError("quant_program must be either 'salmon' or 'kallisto'")
+        raise ValueError("quant_program must be 'salmon'")
     return {'cts' : quants}
 
 def get_contrast(wildcards):
     return config['contrasts'][wildcards.contrast]
 
 def get_multiqc_input(wildcards):
-    if quant_program == 'kallisto':
-        logs = [f"logs/kallisto/{sample_id}.log" for sample_id in samples['id']]
-    else:
-        logs = [f"salmon/{sample_id}" for sample_id in samples['id']]
+    # if quant_program == 'kallisto':
+        # logs = [f"logs/kallisto/{sample_id}.log" for sample_id in samples['id']]
+    # else:
+    logs = [f"salmon/{sample_id}" for sample_id in samples['id']]
     fastqc = [f"qc/fastqc/{sample_id}" for sample_id in samples['id']]
     return logs + fastqc
 
@@ -106,35 +108,37 @@ def get_multiqc_input(wildcards):
 rule targets:
     input:
         expand("{program}/{sample_id}", program=quant_program, sample_id=samples['id']),
-        expand("results/{contrast}/{estimate}_foldchanges.csv", contrast=config['contrasts'], estimate=['mle', 'map']),
-        expand("results/{contrast}/{estimate}_ma.svg", contrast=config['contrasts'], estimate=['mle', 'map']),
+        expand("results/{feature}-level/{contrast}/{estimate}_foldchanges.csv", contrast=config['contrasts'], estimate=['mle', 'map'], feature = ['gene', 'transcript']),
+        expand("results/{feature}-level/{contrast}/{estimate}_ma.svg", contrast=config['contrasts'], estimate=['mle', 'map'], feature = ['gene', 'transcript']),
         "results/pca_plot.svg",
         "results/normalized_counts.rds",
+        "results/normalized_counts_tx.rds",
         "deseq2/all.rds",
+        "deseq2/all_tx.rds",
         "qc/multiqc_report.html"
 
-rule kallisto:
-    input:
-        unpack(get_fqs),
-        idx=kallisto_idx
-    output:
-        directory("kallisto/{sample_id}")
-    params:
-        strand = lambda wildcards: getStrand(wildcards),
-        fqs = lambda wildcards, input: input.fq if not isPE(wildcards) else f"{input.fq1} {input.fq2}",
-        single = lambda wildcards: '' if isPE(wildcards) else '--single',
-        frag_length = lambda wildcards: '' if isPE(wildcards) else f"-l {se_frag_length}",
-        frag_sd = lambda wildcards: '' if isPE(wildcards) else f"-s {se_frag_sd}"
-    log:
-        "logs/kallisto/{sample_id}.log"
-    threads: qthreads
-    singularity: kallisto_env
-    shell:
-        """
-        kallisto quant -i {input.idx} -o {output} -t {threads} \
-            {params.strand} {params.single} {params.frag_length} {params.frag_sd} \
-            {params.fqs} &> >(tee {log})
-        """
+# rule kallisto:
+#     input:
+#         unpack(get_fqs),
+#         idx=kallisto_idx
+#     output:
+#         directory("kallisto/{sample_id}")
+#     params:
+#         strand = lambda wildcards: getStrand(wildcards),
+#         fqs = lambda wildcards, input: input.fq if not isPE(wildcards) else f"{input.fq1} {input.fq2}",
+#         single = lambda wildcards: '' if isPE(wildcards) else '--single',
+#         frag_length = lambda wildcards: '' if isPE(wildcards) else f"-l {se_frag_length}",
+#         frag_sd = lambda wildcards: '' if isPE(wildcards) else f"-s {se_frag_sd}"
+#     log:
+#         "logs/kallisto/{sample_id}.log"
+#     threads: qthreads
+#     singularity: kallisto_env
+#     shell:
+#         """
+#         kallisto quant -i {input.idx} -o {output} -t {threads} \
+#             {params.strand} {params.single} {params.frag_length} {params.frag_sd} \
+#             {params.fqs} &> >(tee {log})
+#         """
 
 rule salmon:
     input:
@@ -143,14 +147,15 @@ rule salmon:
     output:
         directory("salmon/{sample_id}")
     params:
-        fqs = lambda wildcards, input: f"-r {input.fq}" if not isPE(wildcards) else f"-1 {input.fq1} -2 {input.fq2}"
+        fqs = lambda wildcards, input: f"-r {input.fq}" if not isPE(wildcards) else f"-1 {input.fq1} -2 {input.fq2}",
+        reps = lambda wildcards, input: f"--numGibbsSamples 100 -d" if salmon_add_reps else ""
     log:
         "logs/salmon/{sample_id}.log"
     threads: qthreads
     singularity: salmon_env 
     shell:
         """
-        salmon quant -i {input.idx} -l A {params.fqs} -p {threads} -o {output}
+        salmon quant -i {input.idx} -l A {params.fqs} -p {threads} -o {output} {params.reps}
         """
 
 rule deseq2_init:
@@ -159,7 +164,9 @@ rule deseq2_init:
         samples=samples_fp
     output:
         deseq="deseq2/all.rds",
-        cts="results/normalized_counts.rds"
+        cts="results/normalized_counts.rds",
+        deseq_tx="deseq2/all_tx.rds",
+        cts_tx="results/normalized_counts_tx.rds"
     params:
         aligner=quant_program,
         formula=design_formula,
@@ -173,12 +180,17 @@ rule deseq2_init:
 
 rule diffexp:
     input:
-        "deseq2/all.rds"
+        gene="deseq2/all.rds",
+        tx="deseq2/all_tx.rds"
     output:
-        mleres = "results/{contrast}/mle_foldchanges.csv",
-        mapres = "results/{contrast}/map_foldchanges.csv",
-        mlema = "results/{contrast}/mle_ma.svg",
-        mapma = "results/{contrast}/map_ma.svg"
+        gene_mleres = "results/gene-level/{contrast}/mle_foldchanges.csv",
+        gene_mapres = "results/gene-level/{contrast}/map_foldchanges.csv",
+        gene_mlema = "results/gene-level/{contrast}/mle_ma.svg",
+        gene_mapma = "results/gene-level/{contrast}/map_ma.svg",
+        tx_mleres = "results/transcript-level/{contrast}/mle_foldchanges.csv",
+        tx_mapres = "results/transcript-level/{contrast}/map_foldchanges.csv",
+        tx_mlema = "results/transcript-level/{contrast}/mle_ma.svg",
+        tx_mapma = "results/transcript-level/{contrast}/map_ma.svg"
     params:
         formula=design_formula,
         contrast = get_contrast

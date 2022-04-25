@@ -5,15 +5,21 @@ to normalize counts and detect DEGs.
 
 ## Installation
 1. Install Singularity and `snakemake`
-2. Download the appropriate [`kallisto`](https://github.com/pachterlab/kallisto-transcriptome-indices/releases) or  [`salmon`](http://refgenomes.databio.org) references or build your own
+2. Download the [`salmon`](http://refgenomes.databio.org) references or build your own
 3. Clone this repository or a create new repository from this template
 4. Describe your samples in `samples.csv`
 5. Modify the settings in `config.yaml`
 6. (Optional) If you plan on using a SLURM cluster, fill out the `#SBATCH` directives in `run_pipeline.sh` and the `account` field in `cluster.json`. 
 
+## Resources
+Compute and memory resources are dependent on the number of samples. Salmon works well with 8GB for most samples, although
+some samples have required more memory (up to 16GB). DESeq2's memory usage is completely dependent on the number of samples
+being analyzed. For small sample sizes (n = 4 to n = 10), 16GB is recommended to allow transcript-level feature
+analysis. More RAM may be required for larger sample sizes. 
+
 ## Salmon vs Kallisto
-I recommend using `salmon` for quantification as it automatically infers the library strandedness and supports automatic gene annotation via `tximeta`.
-If you prefer to use `kallisto`, make sure to specify the strandedness in the samples file.
+As of April 2022, `bulk-rnaseq` only supports Salmon quantification. Older versions supported Kallisto,
+but this was dropped due to better Salmon integration with tximeta
 
 ## Sample File Configuration
 `bulk-rnaseq` requires you specify a CSV file with a metadata about samples to analyze. 
@@ -22,16 +28,12 @@ There are several required columns:
 * `condition`
 * `fq1`
 * `fq2`
-* `strandedness` (required by `kallisto`; optional if using `salmon`)
 
 The `patient` and `condition` columns are used to create a sample specific ID for downstream processing and identification.
 The values specified in the these columns should create unique values when combined as `{patient}-{condition}`. 
 `condition` should specify the experimental condition of the sample (`normal` or `tumor`, `primary` or `metastatic` etc). 
 
-**NOTE** `salmon` will automatically infer the library stranding and choose the best option. `kallisto` requires you specify
-the stranding info. See [`check-strand`](https://github.com/tjbencomo/check-strand) to determine the proper stranding if you prefer to
-run `kallisto`.
-
+**NOTE** `salmon` will automatically infer the library stranding and choose the best option.
 
 ## Running the pipeline
 Run jobs locally

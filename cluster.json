@@ -8,13 +8,6 @@
         "partition" : "normal",
         "out" : "{logpath}/{rule}-{jobid}.out"
     },
-    "kallisto" :
-    {
-        "time" : "2:00:00",
-        "ncpus" : 4,
-        "mem" : "10G",
-        "out" : "{logpath}/{rule}-{wildcards.sample_id}.out"
-    },
     "salmon" :
     {
         "time" : "3:00:00",

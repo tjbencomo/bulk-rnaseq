@@ -9,7 +9,7 @@
 #SBATCH --mail-user=
 
 set -e
-cd $1
+cd $(pwd)
 echo "Starting up snakemake..."
 snakemake --cluster-config cluster.json -j 499 \
     --use-singularity \

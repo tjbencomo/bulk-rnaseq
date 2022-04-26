@@ -51,40 +51,15 @@ stopifnot(all(samples$id == samples$names))
 stopifnot(all(samples$names == basename(dirname(samples$files))))
 print(samples)
 
+# Save SummarizedExperiment with tx-level data for future use
 se <- tximeta(samples)
-gse <- summarizeToGene(se)
 se <- addIds(se, "SYMBOL", gene = T)
+saveRDS(se, snakemake@output[['se_tx']])
+
+# Collapse to gene-level for DE analysis
+gse <- summarizeToGene(se)
 gse <- addIds(gse, "SYMBOL", gene = T)
 f <- as.formula(design_formula)
-
-## Tx-level
-print("Building DESeq object for transcript-level features")
-ddstx <- DESeqDataSet(se, design = f)
-print("Old ordering for condition")
-print(colData(ddstx)$condition)
-
-## Ensure factor ordering based on config specifications
-vars <- snakemake@params[['levels']]
-var_levels <- str_split(vars, ';', simplify=T)
-for (var in var_levels) {
-    print(paste("Variable:", var))
-    s <- str_split(var, '=|,', simplify=T)
-    col <- s[1, 1]
-    level_order = s[1, 2:dim(s)[2]]
-    colData(ddstx)[, col] <- factor(colData(ddstx)[, col], level_order)
-    print(paste("Ordering for", col))
-    print(levels(colData(ddstx)[, col]))
-}
-
-ddstx <- DESeq(ddstx, parallel=parallel)
-print(ddstx)
-
-vst_tx <- vst(ddstx, blind=FALSE)
-print(vst_tx)
-
-saveRDS(ddstx, file=snakemake@output[['deseq_tx']])
-saveRDS(vst_tx, file=snakemake@output[['cts_tx']])
-
 
 ## Gene-level
 print("Building DESeq object for gene-level features")

@@ -108,13 +108,12 @@ def get_multiqc_input(wildcards):
 rule targets:
     input:
         expand("{program}/{sample_id}", program=quant_program, sample_id=samples['id']),
-        expand("results/{feature}-level/{contrast}/{estimate}_foldchanges.csv", contrast=config['contrasts'], estimate=['mle', 'map'], feature = ['gene', 'transcript']),
-        expand("results/{feature}-level/{contrast}/{estimate}_ma.svg", contrast=config['contrasts'], estimate=['mle', 'map'], feature = ['gene', 'transcript']),
+        expand("results/{contrast}/{estimate}_foldchanges.csv", contrast=config['contrasts'], estimate=['mle', 'map']),
+        expand("results/{contrast}/{estimate}_ma.svg", contrast=config['contrasts'], estimate=['mle', 'map']),
         "results/pca_plot.svg",
         "results/normalized_counts.rds",
-        "results/normalized_counts_tx.rds",
         "deseq2/all.rds",
-        "deseq2/all_tx.rds",
+        "deseq2/se_tx.rds",
         "qc/multiqc_report.html"
 
 # rule kallisto:
@@ -165,8 +164,7 @@ rule deseq2_init:
     output:
         deseq="deseq2/all.rds",
         cts="results/normalized_counts.rds",
-        deseq_tx="deseq2/all_tx.rds",
-        cts_tx="results/normalized_counts_tx.rds"
+        se_tx="deseq2/se_tx.rds",
     params:
         aligner=quant_program,
         formula=design_formula,
@@ -180,17 +178,12 @@ rule deseq2_init:
 
 rule diffexp:
     input:
-        gene="deseq2/all.rds",
-        tx="deseq2/all_tx.rds"
+        gene="deseq2/all.rds"
     output:
-        gene_mleres = "results/gene-level/{contrast}/mle_foldchanges.csv",
-        gene_mapres = "results/gene-level/{contrast}/map_foldchanges.csv",
-        gene_mlema = "results/gene-level/{contrast}/mle_ma.svg",
-        gene_mapma = "results/gene-level/{contrast}/map_ma.svg",
-        tx_mleres = "results/transcript-level/{contrast}/mle_foldchanges.csv",
-        tx_mapres = "results/transcript-level/{contrast}/map_foldchanges.csv",
-        tx_mlema = "results/transcript-level/{contrast}/mle_ma.svg",
-        tx_mapma = "results/transcript-level/{contrast}/map_ma.svg"
+        mleres = "results/{contrast}/mle_foldchanges.csv",
+        mapres = "results/{contrast}/map_foldchanges.csv",
+        mlema = "results/{contrast}/mle_ma.svg",
+        mapma = "results/{contrast}/map_ma.svg",
     params:
         formula=design_formula,
         contrast = get_contrast

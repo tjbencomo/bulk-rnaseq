@@ -3,6 +3,10 @@ Simple  workflow to quantify gene-level RNA abundance and detect differentially 
 from bulk RNAseq samples. The pipeline uses `kallisto` or `salmon` to quantify transcript level abundance and `DESeq2` 
 to normalize counts and detect DEGs. 
 
+## Resource Requirements
+Salmon usually works with 8GB to 12GB of RAM. 16GB is recommended for DESeq2 with small datasets. Larger amounts of memory
+will be required for larger datasets. 
+
 ## Installation
 1. Install Singularity and `snakemake`
 2. Download the [`salmon`](http://refgenomes.databio.org) references or build your own

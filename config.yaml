@@ -12,7 +12,7 @@ slurm_log_dir: slurm-logs
 # Specify number of threads for quantification program (salmon or kallisto)
 quant_threads: 4
 # Specify number of threads for DESeq2
-deseq_threads: 2
+deseq_threads: 4
 
 # Salmon Info
 # Location to folder with salmon index file data

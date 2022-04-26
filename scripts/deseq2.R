@@ -55,6 +55,7 @@ print(samples)
 se <- tximeta(samples)
 se <- addIds(se, "SYMBOL", gene = T)
 saveRDS(se, snakemake@output[['se_tx']])
+rm(se); gc()
 
 # Collapse to gene-level for DE analysis
 gse <- summarizeToGene(se)

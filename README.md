@@ -42,7 +42,8 @@ snakemake -j [cores] --use-singularity
 ```
 Run jobs on a SLURM cluster
 ```
-sbatch run_pipeline.sh [path to directory with Snakefile]
+# Must run within the bulk-rnaseq directory
+sbatch run_pipeline.sh
 ```
 
 ## Output

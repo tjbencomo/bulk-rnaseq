@@ -55,12 +55,14 @@ print(samples)
 se <- tximeta(samples)
 se <- addIds(se, "SYMBOL", gene = T)
 saveRDS(se, snakemake@output[['se_tx']])
-rm(se); gc()
 
 # Collapse to gene-level for DE analysis
 gse <- summarizeToGene(se)
 gse <- addIds(gse, "SYMBOL", gene = T)
 f <- as.formula(design_formula)
+
+# No longer need se object - remove from memory
+rm(se); gc()
 
 ## Gene-level
 print("Building DESeq object for gene-level features")

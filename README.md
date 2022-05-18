@@ -59,3 +59,5 @@ The full DESeq2 object used for differential expression analysis can be found in
 
 A MultiQC html report with quantification statistics and FASTQC reports for each sample is located in `qc/`. 
 Check this to verify a reasonable proportion of reads were pseudoaligned.
+`validateFastq_summary.csv` has the results of running `qc/validateFastq` on each sample's input FASTQ files.
+This checks for proper FASTQ formatting and properly sorted read headers.

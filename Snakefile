@@ -48,6 +48,7 @@ salmon_env = config['salmon_container']
 fastqc_env = config['fastqc_container']
 multiqc_env = config['multiqc_container']
 r_env = config['r_container']
+validateFastq_env = config['validateFastq_container']
 
 def get_fqs(wildcards):
     if isPE(wildcards):
@@ -110,11 +111,13 @@ rule targets:
         expand("{program}/{sample_id}", program=quant_program, sample_id=samples['id']),
         expand("results/{contrast}/{estimate}_foldchanges.csv", contrast=config['contrasts'], estimate=['mle', 'map']),
         expand("results/{contrast}/{estimate}_ma.svg", contrast=config['contrasts'], estimate=['mle', 'map']),
+        expand("qc/validateFastq/{sample_id}.txt", sample_id=samples['id']),
         "results/pca_plot.svg",
         "results/normalized_counts.rds",
         "deseq2/all.rds",
         "deseq2/se_tx.rds",
-        "qc/multiqc_report.html"
+        "qc/multiqc_report.html",
+        "qc/validateFastq_summary.csv"
 
 # rule kallisto:
 #     input:
@@ -235,3 +238,24 @@ rule fastqc:
         rm -r $tmpdir
         """
 
+
+rule validateFastq:
+    input:
+        unpack(get_fqs)
+    output:
+        "qc/validateFastq/{sample_id}.txt"
+    params:
+        fqs = lambda wildcards, input: f"-i {input.fq}" if not isPE(wildcards) else f"-i {input.fq1} -j {input.fq2}"
+    singularity: validateFastq_env
+    shell:
+        """
+        biopet-validatefastq {params} 2>&1 | tee {output}
+        """
+
+rule checkFastqValidation:
+    input:
+        expand("qc/validateFastq/{sample_id}.txt", sample_id = samples['id'])
+    output:
+        "qc/validateFastq_summary.csv"
+    script:
+        "scripts/summarize_fastqValidation.py"

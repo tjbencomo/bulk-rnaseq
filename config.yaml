@@ -57,4 +57,4 @@ kallisto_container: https://depot.galaxyproject.org/singularity/kallisto:0.46.2-
 fastqc_container: https://depot.galaxyproject.org/singularity/fastqc:0.11.9--hdfd78af_1
 multiqc_container: https://depot.galaxyproject.org/singularity/multiqc:1.11--pyhdfd78af_0
 r_container: docker://tbencomo/deseq2
-
+validateFastq_container: https://depot.galaxyproject.org/singularity/biopet-validatefastq:0.1.1--hdfd78af_3

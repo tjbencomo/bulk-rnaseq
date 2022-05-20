@@ -150,7 +150,7 @@ rule salmon:
         directory("salmon/{sample_id}")
     params:
         fqs = lambda wildcards, input: f"-r {input.fq}" if not isPE(wildcards) else f"-1 {input.fq1} -2 {input.fq2}",
-        reps = lambda wildcards, input: f"--numGibbsSamples 100 -d" if salmon_add_reps else ""
+        reps = lambda wildcards, input: f"--numGibbsSamples 50 -d" if salmon_add_reps else ""
     log:
         "logs/salmon/{sample_id}.log"
     threads: qthreads
